@@ -2,7 +2,8 @@ export interface MortgageCredit {
   id: number;
   property_value: number;
   currency: string;
-  fee_value: number;
+  monthly_fee: number;
+  initial_fee: number;
   term: number;
   incomes: number;
 }
