@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import {MortgageCredit} from 'src/app/models/mortgage-credit';
+import {MatSliderChange} from "@angular/material/slider";
 
   export interface PeriodicElement {
   name: string;
@@ -49,6 +50,9 @@ export class HomeComponent implements OnInit {
 
   onSubmit(): void {
       console.log(this.mortgageData);
+  }
+  onInputChange(event:MatSliderChange){
+    console.log(event.value)
   }
 
 }

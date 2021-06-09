@@ -3,14 +3,15 @@
     <mat-card-title>INGRESA LOS DATOS PARA COMENZAR</mat-card-title>
     <mat-card class="card-child">
       <mat-card-content class="card-content">
-        <form [formGroup]="calculateForm" (ngSumbit)="onSubmit()">
+        <form (submit)="onSubmit()" #calculateForm="ngForm">
           <mat-form-field appearance="outline">
             <mat-label>Valor del Activo a cotizar</mat-label>
-            <input matInput formControlName="property_value" placeholder="S/ 250,000">
+            <input matInput name="property_value" placeholder="S/ 250,000" required [(ngModel)]="mortgageData.property_value">
           </mat-form-field>
           <mat-label>Plazo</mat-label>
           <mat-slider
-            formCrontrolName="term"
+            required [(ngModel)]="mortgageData.term"
+            name="term"
             thumbLabel
             tickInterval="100"
             step="1"
@@ -20,11 +21,12 @@
           <mat-hint>Años</mat-hint>
           <mat-form-field appearance="outline">
             <mat-label>Ingresos</mat-label>
-            <input matInput formControlName="income" placeholder="S/ 1,000">
+            <input matInput name="income" placeholder="S/ 1,000" required [(ngModel)]="mortgageData.incomes">
           </mat-form-field>
           <mat-label>Cuota Inicial</mat-label>
           <mat-slider
-            formControlName="fee_value"
+            required [(ngModel)]="mortgageData.fee_value"
+            name="fee_value"
             thumbLabel
             step="5"
             min="10"
@@ -33,12 +35,13 @@
           <mat-hint>Porcentaje</mat-hint>
           <mat-form-field appearance="outline">
             <mat-label>Moneda</mat-label>
-            <mat-select formControlName="currency">
+            <mat-select name="currency"
+                        required [(ngModel)]="mortgageData.currency">
               <mat-option value="Soles">Soles</mat-option>
               <mat-option value="Dólares">Dólares</mat-option>
             </mat-select>
           </mat-form-field>
-          <button mat-raised-button color="accent" class="button-calculate", type="submit">Calcular</button>
+          <button mat-raised-button color="accent" class="button-calculate" type="submit">Calcular</button>
         </form>
       </mat-card-content>
     </mat-card>
