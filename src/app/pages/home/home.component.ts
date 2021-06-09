@@ -6,7 +6,6 @@ import {MatSelectChange} from '@angular/material/select';
 import {RatesApiService} from 'src/app/services/rates-api.service';
 import {MatTableDataSource} from '@angular/material/table';
 import {Rates} from 'src/app/models/rates';
-//import {mainCalc} from './calculo';
 import {Calculate} from './calculate';
 
 @Component({
@@ -27,7 +26,7 @@ export class HomeComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private ratesApi: RatesApiService) {
     this.mortgageData = {} as MortgageCredit;
-    this.calculate = {} as Calculate;
+    this.calculate = new Calculate();
     this.rateCalculate = {} as Rates;
     this.mortgageData.currency = "soles";
     this.calculateForm = this.formBuilder.group({
@@ -50,9 +49,9 @@ export class HomeComponent implements OnInit {
   getRates(): void {
     this.ratesApi.getRateByValueAndFeeValue().subscribe((response: any) =>{
       this.dataSource.data = response;
+      this.onCalculate();
       this.isFill = true;
     })
-    this.onCalculate();
   }
   onInputChange(event:MatSliderChange){
     console.log(event.value)
@@ -65,7 +64,8 @@ export class HomeComponent implements OnInit {
 
   onCalculate() {
     console.log('onCalculate');
-    //console.log(this.dataSource.data[0]);
-    this.calculate.mainCalc(0.07, 390000, 240, 10000, 0.10)
+    console.log(this.dataSource.data[0]);
+    this.calculate.mainCalc(0.07, 390000, 240, 0.10);
+    console.log(this.calculate.cuota_inicial);
   }
 }

@@ -1,3 +1,5 @@
+import { Finance } from 'financejs';
+
 export class Calculate {
 
   /*
@@ -54,9 +56,7 @@ export class Calculate {
   calculo_CapitalAmortizado(
     monto_a_financiar: number,
     tem: number,
-    prestamo_plazo: number,
-    interes: number) {
-    console.log(monto_a_financiar, tem, prestamo_plazo, interes)
+    prestamo_plazo: number, interes: number) {
     return ((monto_a_financiar * tem) / (1 - ((1 + tem) ** (-prestamo_plazo)))) - interes
   }
   // cuota mensual
@@ -96,11 +96,10 @@ export class Calculate {
     return cuotas
   }
   // TCEM o TIR
-  calcular_TCEM(cuota_inicial: number, lista_de_cuotas: number[]) {
-    //var Finance = require('financejs');
-    //var fx = new Finance();
+  calcular_TCEM(cuota_inicial: number, lista_de_cuotas: number[]): number {
+    var fx = new Finance();
     lista_de_cuotas.unshift(-cuota_inicial)
-    //return fx.IRR(lista_de_cuotas)
+    return fx.IRR(lista_de_cuotas);
   }
   // TCEA
   calcular_TCEA(tcem: number, n_cuotas_por_anho: number) {
@@ -108,8 +107,7 @@ export class Calculate {
     return ((1 + tcem) ** n_cuotas_por_anho) - 1
   }
 
-
-  mainCalc(tea: number, valor_inmueble: number, prestamo_plazo: number, ingreso_mensual: number, cuota_inicial_minima: number) {
+  mainCalc(tea: number, valor_inmueble: number, prestamo_plazo: number, cuota_inicial_minima: number) {
 
     // data estatica
     const tasa_desgravamen = 0.000285
@@ -118,14 +116,14 @@ export class Calculate {
 
     // Monto a Financiar
     // Cuota Inicial y Monto del Prestamo
-    const cuota_inicial = this.calculo_CuotaInicial(valor_inmueble, cuota_inicial_minima)
-    const monto_prestamo = this.calculo_MontoDelPrestamo(valor_inmueble, cuota_inicial)
+    this.cuota_inicial = this.calculo_CuotaInicial(valor_inmueble, cuota_inicial_minima)
+    const monto_prestamo = this.calculo_MontoDelPrestamo(valor_inmueble, this.cuota_inicial)
 
     // getRates(ingreso_mensual)
 
     // Interes
     var t = 30 // diferencia dias entre fecha de desembolso y primera cuota
-    var saldoDeCapital = valor_inmueble - cuota_inicial
+    var saldoDeCapital = valor_inmueble - this.cuota_inicial
     const tem = this.calculo_TEM(tea)
     const ted = this.calculo_TED(tem)
     const interes_del_periodo = this.calculo_InteresPeriodo(ted, t, monto_prestamo)
@@ -139,19 +137,16 @@ export class Calculate {
     const capital_amortizado = this.calculo_CapitalAmortizado(saldoDeCapital, parseFloat((tem).toFixed(6)), prestamo_plazo, parseFloat((interes_del_periodo).toFixed(2)))
 
     // Cuota Mensual
-    var cuotaMensual = this.calculo_CuotaMensual(capital_amortizado, interes_del_periodo, desgravamen, seguroRiesgo, comision_envio_estadoDeCuenta)
-    console.log(cuotaMensual)
+    this.cuotaMensual = this.calculo_CuotaMensual(capital_amortizado, interes_del_periodo, desgravamen, seguroRiesgo, comision_envio_estadoDeCuenta)
 
     // Calculo del Calendario -> Lista de Cuotas
     var fecha_desembolso = new Date()
-    var lista_de_cuotas = this.calcular_lista_cuotas(tem, ted, valor_inmueble, fecha_desembolso, prestamo_plazo, saldoDeCapital, capital_amortizado, interes_del_periodo, desgravamen, seguroRiesgo, comision_envio_estadoDeCuenta)
+    lista_de_cuotas = this.calcular_lista_cuotas(tem, ted, valor_inmueble, fecha_desembolso, prestamo_plazo, saldoDeCapital, capital_amortizado, interes_del_periodo, desgravamen, seguroRiesgo, comision_envio_estadoDeCuenta)
 
     // TCEM o TIR
-    //var tcem = calcular_TCEM(cuota_inicial, lista_de_cuotas)
-    var tcem = 0.64
+    var tcem = this.calcular_TCEM(this.cuota_inicial, lista_de_cuotas)
 
-    var tcea = this.calcular_TCEA(tcem, 12)
-    console.log(tcea)
+    this.tcea = this.calcular_TCEA(tcem, 12)
 
     //return [cuota_inicial, cuotaMensual, tcea]
   }
