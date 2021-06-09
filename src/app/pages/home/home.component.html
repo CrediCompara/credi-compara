@@ -3,49 +3,53 @@
     <mat-card-title>INGRESA LOS DATOS PARA COMENZAR</mat-card-title>
     <mat-card class="card-child">
       <mat-card-content>
-        <form (submit)="onSubmit()" #calculateForm="ngForm" class="card-content">
+        <form (submit)="onSubmit()" [formGroup]="calculateForm" class="card-content">
           <mat-form-field appearance="fill">
             <mat-label>Valor del Activo a cotizar</mat-label>
             <span matPrefix>{{sol ? "S/" : "$"}}&nbsp;</span>
-            <input matInput name="property_value" placeholder="2,500" required [(ngModel)]="mortgageData.property_value">
+            <input matInput formControlName="property_value" placeholder="2,500" required [(ngModel)]="mortgageData.property_value">
+            <mat-error *ngIf="calculateForm.controls.property_value.touched && calculateForm.controls.property_value.invalid">
+              <span *ngIf="calculateForm.controls.property_value.errors?.required">Ingrese el valor de la propiedad</span>
+              <span *ngIf="calculateForm.controls.property_value.errors?.pattern">Solo se permiten valores numéricos</span>
+            </mat-error>
           </mat-form-field>
-          <mat-label>Plazo</mat-label>
+          <mat-label>Plazo {{mortgageData.term ? mortgageData.term + " años" : ""}}</mat-label>
           <mat-slider
-            required [(ngModel)]="mortgageData.term"
-            name="term"
+            [(ngModel)]="mortgageData.term"
+            formControlName="term"
             thumbLabel
-            tickInterval="100"
             step="1"
             min="5"
             max="50"
             aria-label="units"></mat-slider>
-          <mat-hint>Años</mat-hint>
           <mat-form-field appearance="fill">
             <mat-label>Ingresos</mat-label>
             <span matPrefix>{{sol ? "S/" : "$"}}&nbsp;</span>
-            <input matInput name="income" placeholder="S/ 1,000" required [(ngModel)]="mortgageData.incomes">
+            <input matInput formControlName="income" placeholder="S/ 1,000" required [(ngModel)]="mortgageData.incomes">
+            <mat-error *ngIf="calculateForm.controls.income.touched && calculateForm.controls.income.invalid">
+              <span *ngIf="calculateForm.controls.income.errors?.required">Ingrese el valor de sus ingresos mensuales</span>
+              <span *ngIf="calculateForm.controls.income.errors?.pattern">Solo se permiten valores numéricos</span>
+            </mat-error>
           </mat-form-field>
           <mat-label>Cuota Inicial</mat-label>
           <mat-slider
-            required [(ngModel)]="mortgageData.fee_value"
-            name="fee_value"
+            required [(ngModel)]="mortgageData.initial_fee"
+            [displayWith]="formatSliderInitialFee"
+            formControlName="initial_fee"
             thumbLabel
             step="5"
             min="10"
-            max="50"
-            aria-label="units"></mat-slider>
-          <mat-hint>Porcentaje</mat-hint>
+            max="50"></mat-slider>
           <mat-form-field appearance="fill">
             <mat-label>Moneda</mat-label>
-            <mat-select name="currency"
+            <mat-select formControlName="currency"
                         required [(ngModel)]="mortgageData.currency"
-                        (selectionChange)="handleSelectionChange($event)"
-                        >
+                        (selectionChange)="handleSelectionChange($event)">
               <mat-option value="Soles">Soles</mat-option>
               <mat-option value="Dólares">Dólares</mat-option>
             </mat-select>
           </mat-form-field>
-          <button mat-raised-button color="accent" class="button-calculate" type="submit">Calcular</button>
+          <button mat-raised-button color="accent" class="button-calculate" type="submit" [disabled]="calculateForm.invalid">Calcular</button>
         </form>
       </mat-card-content>
     </mat-card>

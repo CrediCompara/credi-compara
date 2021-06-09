@@ -6,4 +6,5 @@ export interface MortgageCredit {
   initial_fee: number;
   term: number;
   incomes: number;
+  tcea: number;
 }

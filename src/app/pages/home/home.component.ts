@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {MortgageCredit} from 'src/app/models/mortgage-credit';
-import {MatSliderChange} from "@angular/material/slider";
 import {MatSelectChange} from '@angular/material/select';
 import {RatesApiService} from 'src/app/services/rates-api.service';
 import {MatTableDataSource} from '@angular/material/table';
+import {Observable} from 'rxjs';
+import {Rates} from 'src/app/models/rates';
 
 @Component({
   selector: 'app-home',
@@ -19,15 +20,16 @@ export class HomeComponent implements OnInit {
   dataSource = new MatTableDataSource();
   sol: Boolean = true;
   isFill: Boolean = false;
+  onlyNumberPattern: string = "^[0-9]*$";
 
   constructor(private formBuilder: FormBuilder, private ratesApi: RatesApiService) {
     this.mortgageData = {} as MortgageCredit;
     this.mortgageData.currency = "soles";
     this.calculateForm = this.formBuilder.group({
-      property_value: [null, null],
-      income: [null, null],
+      property_value: [null, [Validators.required, Validators.min(1000), Validators.pattern(this.onlyNumberPattern)]],
+      income: [null, [Validators.required, Validators.pattern(this.onlyNumberPattern)]],
       term: [null, null],
-      fee_value: [null, null],
+      initial_fee: [null, null],
       currency: [null, null]
     });
   }
@@ -36,8 +38,8 @@ export class HomeComponent implements OnInit {
   }
 
   onSubmit(): void {
-      console.log(this.mortgageData);
-      this.getRates();
+    console.log(this.mortgageData);
+    this.getRates();
   }
 
   getRates(): void {
@@ -46,12 +48,14 @@ export class HomeComponent implements OnInit {
       this.isFill = true;
     })
   }
-  onInputChange(event:MatSliderChange){
-    console.log(event.value)
-  }
+
   handleSelectionChange(event: MatSelectChange) {
     if(event.value != "Soles"){
       this.sol = false;
     }else this.sol = true;
   }
+  formatSliderInitialFee(value: number){
+    return value + '%'
+  }
+
 }
