@@ -18,17 +18,17 @@ export class HomeComponent implements OnInit {
   calculateForm: FormGroup;
   mortgageData: MortgageCredit;
   calculate: Calculate;
-  rateCalculate: Rates;
+  rateCalculate: Rates[];
   displayedColumns: string[] = ['id', 'bank', 'term', 'value', 'minRate', 'maxRate', 'favorite'];
   dataSource = new MatTableDataSource();
+
   sol: Boolean = true;
   isFill: Boolean = false;
 
   constructor(private formBuilder: FormBuilder, private ratesApi: RatesApiService) {
     this.mortgageData = {} as MortgageCredit;
     this.calculate = new Calculate();
-    this.rateCalculate = {} as Rates;
-    this.mortgageData.currency = "soles";
+    this.rateCalculate = [];
     this.calculateForm = this.formBuilder.group({
       property_value: [null, null],
       income: [null, null],
@@ -42,15 +42,15 @@ export class HomeComponent implements OnInit {
   }
 
   onSubmit(): void {
-      console.log(this.mortgageData);
       this.getRates();
   }
 
   getRates(): void {
-    this.ratesApi.getRateByValueAndFeeValue().subscribe((response: any) =>{
-      this.dataSource.data = response;
+    this.ratesApi.getRateByValueAndFeeValue().subscribe( res => {
+      this.rateCalculate = res;
+      //this.dataSource.data = response;
       this.onCalculate();
-      this.isFill = true;
+      //this.isFill = true;
     })
   }
   onInputChange(event:MatSliderChange){
@@ -63,9 +63,11 @@ export class HomeComponent implements OnInit {
   }
 
   onCalculate() {
-    console.log('onCalculate');
-    var banco1 = this.dataSource.data[0]
-    console.log(banco1.minRate);
-    this.calculate.mainCalc(0.07, 390000, 240, 0.10);
+    console.log(this.rateCalculate[0])
+    console.log(this.mortgageData);
+    this.calculate.mainCalc(this.rateCalculate[0].minRate/100, this.mortgageData.property_value,
+                            this.mortgageData.term*12, this.mortgageData.initial_fee/100);
+    console.log(this.calculate.cuotaMensual)
+    console.log(this.calculate.tcea)
   }
 }

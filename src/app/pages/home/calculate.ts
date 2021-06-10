@@ -15,15 +15,18 @@ export class Calculate {
   // Rates
   // Tasas --> fake data
   // json
-  tea: number = 0.07
-  // estatico
-  tasa_desgravamen: number = 0.000285
-  tasa_seguro_riesgo: number = 0.00028
-  comision_envio_estadoDeCuenta: number = 11.0
+  // estatico tasa_desgravamen: number = 0.000285 tasa_seguro_riesgo: number = 0.00028
 
+  //################## Fields #################
+  tea: number = 0.07
+  comision_envio_estadoDeCuenta: number = 11.0
   cuota_inicial: number = 0
   cuotaMensual: number = 0
   tcea: number = 0
+  tasa_desgravamen: number = 0.000285
+  tasa_seguro_riesgo: number = 0.00028
+
+  //############## Methods ####################
 
   // calculo de la cuota inicial
   calculo_CuotaInicial(vBien: number, ci_porcentaje: number) {
@@ -117,9 +120,6 @@ export class Calculate {
   mainCalc(tea: number, valor_inmueble: number, prestamo_plazo: number, cuota_inicial_minima: number) {
 
     // data estatica
-    const tasa_desgravamen = 0.000285
-    const tasa_seguro_riesgo = 0.00028
-    const comision_envio_estadoDeCuenta = 11.0
 
     // Monto a Financiar
     // Cuota Inicial y Monto del Prestamo
@@ -136,26 +136,24 @@ export class Calculate {
     const interes_del_periodo = this.calculo_InteresPeriodo(ted, t, monto_prestamo)
 
     // Seguro de Desgravamen
-    const desgravamen = this.calculo_Desgravamen(tasa_desgravamen, t, monto_prestamo)
+    const desgravamen = this.calculo_Desgravamen(this.tasa_desgravamen, t, monto_prestamo)
     // Seguro de Riesgo
-    const seguroRiesgo = this.calculo_SeguroRiesgo(tasa_seguro_riesgo, valor_inmueble)
+    const seguroRiesgo = this.calculo_SeguroRiesgo(this.tasa_seguro_riesgo, valor_inmueble)
 
     // Capital amortizado
     const capital_amortizado = this.calculo_CapitalAmortizado(saldoDeCapital, parseFloat((tem).toFixed(6)), prestamo_plazo, parseFloat((interes_del_periodo).toFixed(2)))
 
     // Cuota Mensual
-    this.cuotaMensual = this.calculo_CuotaMensual(capital_amortizado, interes_del_periodo, desgravamen, seguroRiesgo, comision_envio_estadoDeCuenta)
+    this.cuotaMensual = this.calculo_CuotaMensual(capital_amortizado, interes_del_periodo, desgravamen, seguroRiesgo, this.comision_envio_estadoDeCuenta)
 
     // Calculo del Calendario -> Lista de Cuotas
     var fecha_desembolso = new Date()
-    var lista_de_cuotas = this.calcular_lista_cuotas(tem, ted, valor_inmueble, fecha_desembolso, prestamo_plazo, saldoDeCapital, capital_amortizado, interes_del_periodo, desgravamen, seguroRiesgo, comision_envio_estadoDeCuenta)
+    var lista_de_cuotas = this.calcular_lista_cuotas(tem, ted, valor_inmueble, fecha_desembolso, prestamo_plazo, saldoDeCapital, capital_amortizado, interes_del_periodo, desgravamen, seguroRiesgo, this.comision_envio_estadoDeCuenta)
 
     // TCEM o TIR
     var tcem = this.calcular_TCEM(lista_de_cuotas)
 
     this.tcea = this.calcular_TCEA(tcem, 12)
-    console.log("tcea:",this.tcea);
 
-    //return [cuota_inicial, cuotaMensual, tcea]
   }
 }
