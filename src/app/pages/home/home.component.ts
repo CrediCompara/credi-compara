@@ -64,8 +64,8 @@ export class HomeComponent implements OnInit {
 
   onCalculate() {
     console.log('onCalculate');
-    console.log(this.dataSource.data[0]);
+    var banco1 = this.dataSource.data[0]
+    console.log(banco1.minRate);
     this.calculate.mainCalc(0.07, 390000, 240, 0.10);
-    console.log(this.calculate.cuota_inicial);
   }
 }

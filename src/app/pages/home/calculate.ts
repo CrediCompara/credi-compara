@@ -1,4 +1,6 @@
-import { Finance } from 'financejs';
+import { irr } from 'financial';
+import { Finance } from 'financejs'
+
 
 export class Calculate {
 
@@ -96,10 +98,15 @@ export class Calculate {
     return cuotas
   }
   // TCEM o TIR
-  calcular_TCEM(cuota_inicial: number, lista_de_cuotas: number[]): number {
-    var fx = new Finance();
-    lista_de_cuotas.unshift(-cuota_inicial)
-    return fx.IRR(lista_de_cuotas);
+  calcular_TCEM(lista_de_cuotas: number[]) {
+    //let finance = new financial();
+    let finance = new Finance();
+    lista_de_cuotas.unshift(-this.cuota_inicial)
+    //return fx.IRR(lista_de_cuotas);
+    //console.log(lista_de_cuotas);
+    //return irr(lista_de_cuotas);
+    //return finance.IRR(lista_de_cuotas)
+    return irr(lista_de_cuotas)
   }
   // TCEA
   calcular_TCEA(tcem: number, n_cuotas_por_anho: number) {
@@ -141,12 +148,13 @@ export class Calculate {
 
     // Calculo del Calendario -> Lista de Cuotas
     var fecha_desembolso = new Date()
-    lista_de_cuotas = this.calcular_lista_cuotas(tem, ted, valor_inmueble, fecha_desembolso, prestamo_plazo, saldoDeCapital, capital_amortizado, interes_del_periodo, desgravamen, seguroRiesgo, comision_envio_estadoDeCuenta)
+    var lista_de_cuotas = this.calcular_lista_cuotas(tem, ted, valor_inmueble, fecha_desembolso, prestamo_plazo, saldoDeCapital, capital_amortizado, interes_del_periodo, desgravamen, seguroRiesgo, comision_envio_estadoDeCuenta)
 
     // TCEM o TIR
-    var tcem = this.calcular_TCEM(this.cuota_inicial, lista_de_cuotas)
+    var tcem = this.calcular_TCEM(lista_de_cuotas)
 
     this.tcea = this.calcular_TCEA(tcem, 12)
+    console.log("tcea:",this.tcea);
 
     //return [cuota_inicial, cuotaMensual, tcea]
   }
