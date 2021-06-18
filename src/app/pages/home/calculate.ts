@@ -18,13 +18,12 @@ export class Calculate {
   // estatico tasa_desgravamen: number = 0.000285 tasa_seguro_riesgo: number = 0.00028
 
   //################## Fields #################
-  tea: number = 0.07
   comision_envio_estadoDeCuenta: number = 11.0
   cuota_inicial: number = 0
   cuotaMensual: number = 0
   tcea: number = 0
-  tasa_desgravamen: number = 0.000285
-  tasa_seguro_riesgo: number = 0.00028
+  tasa_desgravamen: number = 0.0285/100
+  tasa_seguro_riesgo: number = 0.028/100
 
   //############## Methods ####################
 
@@ -50,8 +49,7 @@ export class Calculate {
   }
   // calculo desgravamen
   calculo_Desgravamen(iD: number, tD: number, _S: number) {
-    tD = tD / 30
-    return (((1 + (iD)) ** tD) - 1) * _S
+    return (Math.pow((1 + iD),tD / 30) - 1) * _S
   }
   // calculo seguro de riesgo
   calculo_SeguroRiesgo(iB: number, vBien: number) {
@@ -95,7 +93,7 @@ export class Calculate {
       capital_amortizado = this.calculo_CapitalAmortizado(saldoDeCapital, tem, prestamo_plazo, interes_del_periodo)
       interes_del_periodo = this.calculo_InteresPeriodo(ted, 30, saldoDeCapital)
       desgravamen = this.calculo_Desgravamen(this.tasa_desgravamen, 30, saldoDeCapital)
-      seguroRiesgo = this.calculo_SeguroRiesgo(this.tasa_seguro_riesgo, valor_inmueble)
+      //seguroRiesgo = this.calculo_SeguroRiesgo(this.tasa_seguro_riesgo, valor_inmueble)
       prestamo_plazo -= 1
     }
     return cuotas
@@ -113,8 +111,7 @@ export class Calculate {
   }
   // TCEA
   calcular_TCEA(tcem: number, n_cuotas_por_anho: number) {
-    tcem = tcem / 100
-    return ((1 + tcem) ** n_cuotas_por_anho) - 1
+    return (Math.pow((1 + (tcem/100)), n_cuotas_por_anho)) - 1
   }
 
   mainCalc(tea: number, valor_inmueble: number, prestamo_plazo: number, cuota_inicial_minima: number) {
@@ -141,7 +138,7 @@ export class Calculate {
     const seguroRiesgo = this.calculo_SeguroRiesgo(this.tasa_seguro_riesgo, valor_inmueble)
 
     // Capital amortizado
-    const capital_amortizado = this.calculo_CapitalAmortizado(saldoDeCapital, parseFloat((tem).toFixed(6)), prestamo_plazo, parseFloat((interes_del_periodo).toFixed(2)))
+    const capital_amortizado = this.calculo_CapitalAmortizado(saldoDeCapital, tem, prestamo_plazo, interes_del_periodo)
 
     // Cuota Mensual
     this.cuotaMensual = this.calculo_CuotaMensual(capital_amortizado, interes_del_periodo, desgravamen, seguroRiesgo, this.comision_envio_estadoDeCuenta)
@@ -154,6 +151,5 @@ export class Calculate {
     var tcem = this.calcular_TCEM(lista_de_cuotas)
 
     this.tcea = this.calcular_TCEA(tcem, 12)
-
   }
 }

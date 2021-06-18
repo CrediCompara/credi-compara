@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
   mortgageData: MortgageCredit;
   calculate: Calculate;
   rateCalculate: Rates[];
-  displayedColumns: string[] = ['id', 'bank', 'term', 'value', 'minRate', 'maxRate', 'favorite'];
+  displayedColumns: string[] =['monthly_fee', 'tcea', 'property_value', 'term', 'currency','favorite'];
   dataSource = new MatTableDataSource();
 
   sol: Boolean = true;
@@ -60,15 +60,16 @@ export class HomeComponent implements OnInit {
     }else this.sol = true;
   }
   formatSliderInitialFee(value: number){
-    return value + '%'
+    return value + '%';
   }
 
   onCalculate() {
-    console.log(this.rateCalculate[0])
-    console.log(this.mortgageData);
     this.calculate.mainCalc(this.rateCalculate[0].minRate/100, this.mortgageData.property_value,
                             this.mortgageData.term*12, this.mortgageData.initial_fee/100);
-    console.log(this.calculate.cuotaMensual)
-    console.log(this.calculate.tcea)
+    this.mortgageData.monthly_fee = parseFloat(this.calculate.cuotaMensual.toFixed(2));
+    this.mortgageData.tcea = parseFloat((this.calculate.tcea * 100).toFixed(4));
+    this.mortgageData.initial_fee = this.calculate.cuota_inicial
+    this.dataSource.data.push(this.mortgageData);
+    this.isFill = true;
   }
 }
