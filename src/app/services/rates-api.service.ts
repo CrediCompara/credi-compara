@@ -26,8 +26,8 @@ export class RatesApiService {
   }
 
   // GET rate
-  getRateByValueAndFeeValue(): Observable<Rates>{
-    return this.http.get<Rates>(this.basePath)
+  getRateByValueAndFeeValue(): Observable<Rates[]>{
+    return this.http.get<Rates[]>(this.basePath)
       .pipe(retry(2), catchError(this.handleError));
   }
 }

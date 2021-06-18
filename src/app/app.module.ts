@@ -23,7 +23,7 @@ import { MatSelectModule } from '@angular/material/select';
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,7 +43,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatPaginatorModule,
     MatSortModule,
     MatSliderModule,
-    MatSelectModule
+    MatSelectModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
