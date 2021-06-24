@@ -34,7 +34,8 @@ export class HomeComponent implements OnInit {
       income: [null, [Validators.required, Validators.pattern(this.onlyNumberPattern)]],
       term: [null, null],
       initial_fee: [null, null],
-      currency: [null, null]
+      currency: [null, null],
+      method: [null, null]
     });
   }
 
