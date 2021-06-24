@@ -47,7 +47,7 @@ export class HomeComponent implements OnInit {
   }
 
   getRates(): void {
-    this.ratesApi.getRateByValueAndFeeValue().subscribe( res => {
+    this.ratesApi.getRateByValueAndFeeValue(this.mortgageData.term, this.mortgageData.property_value, this.mortgageData.currency).subscribe( res => {
       this.rateCalculate = res;
       //this.dataSource.data = response;
       this.onCalculate();
@@ -56,7 +56,7 @@ export class HomeComponent implements OnInit {
   }
 
   handleSelectionChange(event: MatSelectChange) {
-    if(event.value != "Soles"){
+    if(event.value != "sol"){
       this.sol = false;
     }else this.sol = true;
   }
