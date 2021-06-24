@@ -10,7 +10,7 @@ import { retry, catchError } from 'rxjs/operators';
 export class RatesApiService {
 
   // Rate Endpoint
-  basePath="http://localhost:3000/api/rates";
+  basePath="http://localhost:8080/api/rates";
   httpOptions={ headers: new HttpHeaders({'Content-Type': 'application/json'})}
 
   constructor(private http: HttpClient) {  }
@@ -26,8 +26,8 @@ export class RatesApiService {
   }
 
   // GET rate
-  getRateByValueAndFeeValue(): Observable<Rates[]>{
-    return this.http.get<Rates[]>(this.basePath)
+  getRateByValueAndFeeValue(term: number, pvalue: number, currency: string): Observable<Rates[]>{
+    return this.http.get<Rates[]>(`${this.basePath}/${term}/${pvalue}/${currency}`)
       .pipe(retry(2), catchError(this.handleError));
   }
 }

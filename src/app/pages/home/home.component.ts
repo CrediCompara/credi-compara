@@ -47,7 +47,7 @@ export class HomeComponent implements OnInit {
   }
 
   getRates(): void {
-    this.ratesApi.getRateByValueAndFeeValue().subscribe( res => {
+    this.ratesApi.getRateByValueAndFeeValue(this.mortgageData.term, this.mortgageData.property_value, this.mortgageData.currency).subscribe( res => {
       this.rateCalculate = res;
       //this.dataSource.data = response;
       this.onCalculate();

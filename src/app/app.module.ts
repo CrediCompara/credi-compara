@@ -24,6 +24,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import {RatesApiService} from './services/rates-api.service';
+import {UserApiService} from './services/user-api.service';
 
 @NgModule({
   declarations: [
@@ -55,7 +57,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatDatepickerModule,
     MatNativeDateModule
   ],
-  providers: [],
+  providers: [RatesApiService, UserApiService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
