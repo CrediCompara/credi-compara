@@ -56,7 +56,7 @@ export class HomeComponent implements OnInit {
   }
 
   handleSelectionChange(event: MatSelectChange) {
-    if(event.value != "Soles"){
+    if(event.value != "sol"){
       this.sol = false;
     }else this.sol = true;
   }
