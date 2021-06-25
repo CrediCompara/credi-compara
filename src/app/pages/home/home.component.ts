@@ -18,6 +18,7 @@ export class HomeComponent implements OnInit {
   mortgageData: MortgageCredit;
   calculate: Calculate;
   rateCalculate: Rates[];
+  dataSourceList : MortgageCredit[]=[];
   displayedColumns: string[] =['monthly_fee', 'tcea', 'property_value', 'term', 'currency','favorite'];
   dataSource = new MatTableDataSource();
 
@@ -70,6 +71,7 @@ export class HomeComponent implements OnInit {
     this.mortgageData.monthly_fee = parseFloat(this.calculate.cuotaMensual.toFixed(2));
     this.mortgageData.tcea = parseFloat((this.calculate.tcea * 100).toFixed(4));
     this.mortgageData.initial_fee = this.calculate.cuota_inicial
+    this.dataSourceList.push(this.mortgageData);
     this.dataSource.data.push(this.mortgageData);
     this.isFill = true;
   }
