@@ -1,11 +1,12 @@
 @media only screen and (min-width: 1085px) {
   .home-content {
     display: grid;
+    height: 94vh;
     grid-template-columns: repeat(2, 1fr);
     align-items: center;
     background-image: url("../../../assets/images/background.jpg");
     background-size: 100% 100%;
-    
+    padding: 0 20px;
   }
 
   .card-parent {
@@ -16,7 +17,6 @@
 
   .card-child {
     display: grid;
-    border: 1px black solid;
   }
 
   .card-content {
@@ -370,6 +370,7 @@
     align-items: center;
   }
 }
+
 @media all and (max-width: 475px){
   .home-content{
 
