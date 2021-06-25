@@ -162,69 +162,57 @@ export class Calculate {
   n_dias_anio: number =  360;
   tasa_desgravamen: number = 0.05000/100;
   tasa_seguro_riesgo: number = 0.3/100;
-  tea: number = 0.25;
+  tea: number = 0.10;
   numero_cuotas_anio = this.n_dias_anio/this.frecuencia_de_pago;
   saldo_financiar = this.precio_venta_activo - this.precio_venta_activo*this.cuota_inicial;
   total_cuotas = this.numero_cuotas_anio * this.n_anios;
   segRies = this.tasa_seguro_riesgo * this.precio_venta_activo/this.numero_cuotas_anio;
 
-  pmt(rate_per_period: number, number_of_payments: number, present_value: number, future_value: number, type: number){
-    future_value = typeof future_value !== 'undefined' ? future_value : 0;
-    type = typeof type !== 'undefined' ? type : 0;
-
-    if(rate_per_period != 0.0){
-      // Interest rate exists
-      var q = Math.pow(1 + rate_per_period, number_of_payments);
-      return -(rate_per_period * (future_value + (q * present_value))) / ((-1 + q) * (1 + rate_per_period * (type)));
-
-    } else if(number_of_payments != 0.0){
-      // No interest rate, but number of payments exists
-      return -(future_value + present_value) / number_of_payments;
+  pmt (rate:number, nper:number, pv:number, fv:number, type:number): number {
+    if (!fv) fv = 0;
+    if (!type) type = 0;
+    if (rate == 0) return -(pv + fv)/nper;
+    var pvif = Math.pow(1 + rate, nper);
+    var pmt = rate / (pvif - 1) * -(pv * pvif + fv);
+    if (type == 1) {
+      pmt /= (1 + rate);
     }
-
-    return 0;
+    return pmt
   }
 
-  french_method(){
+  french_method(): number[]{
     let tep = 0;
     let saldo_inicial = 0;
     let saldo_final = 0;
     let interes = 0;
-    const cuotas = [];
+    const cuotas: number[] = [];
     let cuota_aux = 0;
     const amortizacion = [];
+    const flujos: number[] = [];
     let amort_aux = 0;
     let segDes = 0;
     let segRisk = 0;
-    let flujo = 0;
-    for(let nc = 1; nc <= this.total_cuotas; nc++) { if(nc <= this.total_cuotas){
-        tep = (1+this.tea)^(this.frecuencia_de_pago/this.n_dias_anio) - 1;
-      }
-      else{
-        tep = 0;
-      }
+    let flujo = this.saldo_financiar;
+    for(let nc = 1; nc <= this.total_cuotas; nc++) {
+      console.log(flujo)
+      flujos.push(flujo);
+      tep = Math.pow(1+this.tea, this.frecuencia_de_pago/this.n_dias_anio) - 1;
       if(nc == 1){
         saldo_inicial = this.saldo_financiar;
       }
-      else if(nc <= this.total_cuotas) {
+      else {
         saldo_inicial = saldo_final;
       }
-      else{
-        saldo_inicial = 0;
-      }
       interes = -saldo_inicial * tep;
-      cuota_aux = this.pmt(tep,this.tasa_desgravamen,this.total_cuotas - nc + 1,saldo_inicial, 0);
+      cuota_aux = this.pmt(tep+this.tasa_desgravamen, this.total_cuotas - nc + 1, saldo_inicial, 0, 0);
       cuotas.push(cuota_aux);
-      segDes = -saldo_inicial*(this.tasa_desgravamen);
+      segDes = -(saldo_inicial*this.tasa_desgravamen);
       amort_aux = cuota_aux - interes - segDes;
       amortizacion.push(amort_aux);
       segRisk = -this.segRies;
       saldo_final = saldo_inicial+amort_aux;
-      flujo = cuota_aux+segRisk+segDes;
+      flujo = cuota_aux + segRisk + segDes;
     }
-    return saldo_final
+    return cuotas;
   }
-
-
-
 }

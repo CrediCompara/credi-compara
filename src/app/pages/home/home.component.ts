@@ -65,12 +65,13 @@ export class HomeComponent implements OnInit {
   }
 
   onCalculate() {
-    this.calculate.mainCalc(this.rateCalculate[0].minRate/100, this.mortgageData.property_value,
-                            this.mortgageData.term*12, this.mortgageData.initial_fee/100);
-    this.mortgageData.monthly_fee = parseFloat(this.calculate.cuotaMensual.toFixed(2));
-    this.mortgageData.tcea = parseFloat((this.calculate.tcea * 100).toFixed(4));
-    this.mortgageData.initial_fee = this.calculate.cuota_inicial
-    this.dataSource.data.push(this.mortgageData);
+    //this.calculate.mainCalc(this.rateCalculate[0].minRate/100, this.mortgageData.property_value,
+    //                        this.mortgageData.term*12, this.mortgageData.initial_fee/100);
+    //this.mortgageData.monthly_fee = parseFloat(this.calculate.cuotaMensual.toFixed(2));
+    //this.mortgageData.tcea = parseFloat((this.calculate.tcea * 100).toFixed(4));
+    //this.mortgageData.initial_fee = this.calculate.cuota_inicial
+    //this.dataSource.data.push(this.mortgageData);
+    console.log(this.calculate.french_method());
     this.isFill = true;
   }
 }
