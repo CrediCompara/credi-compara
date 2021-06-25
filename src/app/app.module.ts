@@ -29,6 +29,7 @@ import {UserApiService} from './services/user-api.service';
 import {authInterceptorProviders} from './helpers/auth-interceptor';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
+import { SignupComponent } from './pages/signup/signup.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     HomeComponent,
     LoginComponent,
     NotFoundComponent,
+    SignupComponent,
   ],
   imports: [
     BrowserModule,
