@@ -28,7 +28,7 @@ export class UserApiService {
 
   // Register User
   registerUser(item: any): Observable<User>{
-    return this.http.post<User>(this.basePath, JSON.stringify(item), this.httpOptions)
+    return this.http.post<User>(`${this.basePath}/auth/sign-up`, JSON.stringify(item), this.httpOptions)
       .pipe(retry(2), catchError(this.handleError));
   }
 

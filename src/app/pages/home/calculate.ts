@@ -155,18 +155,24 @@ export class Calculate {
     //this.tcea = this.calcular_TCEA(tcem, 12)
   }*/
 
-  precio_venta_activo: number = 125000;
-  cuota_inicial: number = 0.20;
-  n_anios: number = 15;
+  //precio_venta_activo: number = 125000;
+  //cuota_inicial: number = 0.20;
+  //n_anios: number = 15;
   frecuencia_de_pago: number = 30;
   n_dias_anio: number =  360;
   tasa_desgravamen: number = 0.05000/100;
   tasa_seguro_riesgo: number = 0.3/100;
-  tea: number = 0.10;
-  numero_cuotas_anio = this.n_dias_anio/this.frecuencia_de_pago;
-  saldo_financiar = this.precio_venta_activo - this.precio_venta_activo*this.cuota_inicial;
-  total_cuotas = this.numero_cuotas_anio * this.n_anios;
-  segRies = this.tasa_seguro_riesgo * this.precio_venta_activo/this.numero_cuotas_anio;
+  //tea: number = 0.10;
+  //numero_cuotas_anio = this.n_dias_anio/this.frecuencia_de_pago;
+  //saldo_financiar = this.precio_venta_activo - this.precio_venta_activo*this.cuota_inicial;
+  //total_cuotas = this.numero_cuotas_anio * this.n_anios;
+  //segRies = this.tasa_seguro_riesgo * this.precio_venta_activo/this.numero_cuotas_anio;
+
+  //Results
+  cuotas: number[] = [];
+  amortizacion: number[] = [];
+  tcea: number = 0.0;
+
 
   pmt (rate:number, nper:number, pv:number, fv:number, type:number): number {
     if (!fv) fv = 0;
@@ -180,39 +186,47 @@ export class Calculate {
     return pmt
   }
 
-  french_method(): number[]{
+  french_method(precio_venta_activo: number, cuota_inicial: number,
+                n_anios: number, tea: number): void{
+    // Clear arrays
+    this.cuotas = [];
+    this.amortizacion = [];
+
+    // Required calculations
+    let numero_cuotas_anio = this.n_dias_anio/this.frecuencia_de_pago;
+    let saldo_financiar = precio_venta_activo - precio_venta_activo*cuota_inicial;
+    let total_cuotas = numero_cuotas_anio * n_anios;
+    let segRies = this.tasa_seguro_riesgo * precio_venta_activo/numero_cuotas_anio;
+
+
     let tep = 0;
     let saldo_inicial = 0;
     let saldo_final = 0;
     let interes = 0;
-    const cuotas: number[] = [];
     let cuota_aux = 0;
-    const amortizacion = [];
     const flujos: number[] = [];
     let amort_aux = 0;
     let segDes = 0;
     let segRisk = 0;
-    let flujo = this.saldo_financiar;
-    for(let nc = 1; nc <= this.total_cuotas; nc++) {
-      console.log(flujo)
+    let flujo = saldo_financiar;
+    for(let nc = 1; nc <= total_cuotas; nc++) {
       flujos.push(flujo);
-      tep = Math.pow(1+this.tea, this.frecuencia_de_pago/this.n_dias_anio) - 1;
+      tep = Math.pow(1+tea, this.frecuencia_de_pago/this.n_dias_anio) - 1;
       if(nc == 1){
-        saldo_inicial = this.saldo_financiar;
+        saldo_inicial = saldo_financiar;
       }
       else {
         saldo_inicial = saldo_final;
       }
       interes = -saldo_inicial * tep;
-      cuota_aux = this.pmt(tep+this.tasa_desgravamen, this.total_cuotas - nc + 1, saldo_inicial, 0, 0);
-      cuotas.push(cuota_aux);
+      cuota_aux = this.pmt(tep+this.tasa_desgravamen, total_cuotas - nc + 1, saldo_inicial, 0, 0);
+      this.cuotas.push(parseFloat(cuota_aux.toFixed(2)));
       segDes = -(saldo_inicial*this.tasa_desgravamen);
       amort_aux = cuota_aux - interes - segDes;
-      amortizacion.push(amort_aux);
-      segRisk = -this.segRies;
+      this.amortizacion.push(parseFloat(amort_aux.toFixed(2)));
+      segRisk = -segRies;
       saldo_final = saldo_inicial+amort_aux;
       flujo = cuota_aux + segRisk + segDes;
     }
-    return cuotas;
   }
 }

@@ -18,9 +18,7 @@ export class HomeComponent implements OnInit {
   mortgageData: MortgageCredit;
   calculate: Calculate;
   rateCalculate: Rates[];
-  dataSourceList : MortgageCredit[]=[];
-  displayedColumns: string[] =['monthly_fee', 'tcea', 'property_value', 'term', 'currency','favorite'];
-  dataSource = new MatTableDataSource();
+  dataSourceList : MortgageCredit[] = [];
 
   sol: Boolean = true;
   isFill: Boolean = false;
@@ -45,14 +43,18 @@ export class HomeComponent implements OnInit {
 
   onSubmit(): void {
     this.getRates();
+    this.isFill = true;
   }
 
   getRates(): void {
-    this.ratesApi.getRateByValueAndFeeValue(this.mortgageData.term, this.mortgageData.property_value, this.mortgageData.currency).subscribe( res => {
-      this.rateCalculate = res;
-      //this.dataSource.data = response;
-      this.onCalculate();
-      //this.isFill = true;
+    this.ratesApi.getRateByValueAndFeeValue(this.mortgageData.term, this.mortgageData.property_value, this.mortgageData.currency).subscribe((res: Rates[]) => {
+      res.forEach(rate => {
+        console.log(rate)
+        this.calculate.french_method(
+          this.mortgageData.property_value, this.mortgageData.initial_fee/100, this.mortgageData.term, rate.min_rate/100);
+        console.log(this.calculate.cuotas);
+        this.nextToCalculate();
+      })
     })
   }
 
@@ -65,14 +67,10 @@ export class HomeComponent implements OnInit {
     return value + '%';
   }
 
-  onCalculate() {
-    //this.calculate.mainCalc(this.rateCalculate[0].minRate/100, this.mortgageData.property_value,
-    //                        this.mortgageData.term*12, this.mortgageData.initial_fee/100);
-    //this.mortgageData.monthly_fee = parseFloat(this.calculate.cuotaMensual.toFixed(2));
+  nextToCalculate() {
+    this.mortgageData.monthly_fee = -(this.calculate.cuotas[this.calculate.cuotas.length-1]);
     //this.mortgageData.tcea = parseFloat((this.calculate.tcea * 100).toFixed(4));
-    //this.mortgageData.initial_fee = this.calculate.cuota_inicial
-    //this.dataSource.data.push(this.mortgageData);
-    console.log(this.calculate.french_method());
-    this.isFill = true;
+    this.mortgageData.tcea = 11.0000;
+    this.dataSourceList.push(this.mortgageData);
   }
 }

@@ -25,3 +25,13 @@
 .spinner {
   margin: 0 auto;
 }
+
+.fields{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.mat-form-field {
+  margin: 0 5px;
+}
