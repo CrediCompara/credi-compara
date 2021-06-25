@@ -1,11 +1,30 @@
 <mat-toolbar class="nav-bar">
- <a routerLink='/home-component' routerLinkActive="active" class="title-name"><span>CrediCompara</span></a>
+ <a routerLink='/home' routerLinkActive="active" class="title-name"><span>CrediCompara</span></a>
  <span class="example-spacer"></span>
- <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon" >
-   <mat-icon>favorite</mat-icon>
- </button>
- <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
-   <mat-icon>account_circle</mat-icon>
- </button>
+ <div *ngIf="isLoggedIn">
+  <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon" >
+    <mat-icon>favorite</mat-icon>
+  </button>
+  <button mat-button class="example-icon" aria-label="Example icon-button with share icon">
+    <mat-icon>account_circle</mat-icon> {{username}}
+  </button>
+  <button mat-icon-button class="example-icon"
+    arial-label="Example icon-button with share icon"
+    (click)="logout()">
+    <mat-icon>logout</mat-icon>
+  </button>
+ </div>
+ <div *ngIf="!isLoggedIn">
+  <button mat-button class="example-icon favorite-icon"
+    arial-label="Example icon-button with share icon"
+    routerLink="/login">
+    Sign up
+  </button>
+  <button mat-button class="example-icon favorite-icon"
+    arial-label="Example icon-button with share icon"
+    routerLink="/register">
+    Sign in
+  </button>
+ </div>
 </mat-toolbar>
 <router-outlet></router-outlet>

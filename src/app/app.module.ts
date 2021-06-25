@@ -26,12 +26,15 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import {RatesApiService} from './services/rates-api.service';
 import {UserApiService} from './services/user-api.service';
+import {authInterceptorProviders} from './helpers/auth-interceptor';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     LoginComponent,
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,
@@ -57,7 +60,7 @@ import {UserApiService} from './services/user-api.service';
     MatDatepickerModule,
     MatNativeDateModule
   ],
-  providers: [RatesApiService, UserApiService],
+  providers: [RatesApiService, UserApiService, authInterceptorProviders],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

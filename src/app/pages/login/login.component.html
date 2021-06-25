@@ -1,14 +1,12 @@
 <div class="body">
-
   <div class="login">
-
-    <mat-spinner *ngIf="loading" class="spinner" diameter="50"></mat-spinner>
+    <mat-spinner *ngIf="loading" class="spinner" diameter="100"></mat-spinner>
     <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="ingresar()">
       <img src="../../../assets/images/user.png" alt="User" width="50%">
       <h1>Login</h1>
       <mat-form-field class="ancho" appearance="fill">
-        <mat-label>User Name</mat-label>
-        <input matInput autocomplete="off" formControlName="user">
+        <mat-label>E-mail</mat-label>
+        <input matInput autocomplete="off" formControlName="username">
       </mat-form-field>
       <mat-form-field class="ancho" appearance="fill">
         <mat-label>Password</mat-label>
@@ -18,5 +16,4 @@
       <button type="submit" class="ancho button" mat-raised-button color="primary" [disabled]="form.invalid">Ingresar</button>
     </form>
   </div>
-
 </div>
