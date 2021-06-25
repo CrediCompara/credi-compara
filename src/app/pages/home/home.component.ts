@@ -50,7 +50,7 @@ export class HomeComponent implements OnInit {
     this.ratesApi.getRateByValueAndFeeValue(this.mortgageData.term, this.mortgageData.property_value, this.mortgageData.currency).subscribe((res: Rates[]) => {
       res.forEach(rate => {
         console.log(rate)
-        this.calculate.french_method(
+        this.calculate.german_method(
           this.mortgageData.property_value, this.mortgageData.initial_fee/100, this.mortgageData.term, rate.min_rate/100);
         console.log(this.calculate.cuotas);
         this.nextToCalculate();
