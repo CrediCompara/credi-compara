@@ -1,72 +1,331 @@
-.home-content{
-  width: auto;
-  height: 93%;
-  margin: 0;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  background-image: url("../../../assets/images/background.jpg");
-  background-size: 100% 100%;
-}
-
-.card-child {
-  margin: 5px 0 0 0;
-  width: 95%;
-}
-
-.card-parent {
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #E7104B;
-  color: white;
-  width: 40%;
-}
-
-.card-content {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-}
-
-.columns2 {
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.mat-form-field{
-  width: 200px;
-}
-
-.button-calculate {
-  width: 100%;
-  margin-bottom: 35px;
-}
-
-table {
-  width: 40%;
-}
-
-@media all and (max-width: 1000px){
-  .card-parent {
-    width: 80%;
+@media only screen and (min-width: 1085px) {
+  .home-content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: center;
+    background-image: url("../../../assets/images/background.jpg");
+    background-size: 100% 100%;
+    
   }
 
-}
+  .card-parent {
+    background-color: #E7104B;
+    color: white;
 
-@media all and (max-width: 500px){
-  .home-content {
+  }
+
+  .card-child {
+    display: grid;
+    border: 1px black solid;
+  }
+
+  .card-content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+
+  }
+
+  .columns1 {
+    display: flex;
     flex-direction: column;
     align-items: center;
   }
-  .card-parent {
-    margin: 0;
+
+  .columns2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+  }
+
+  .mat-form-field {
     width: 80%;
+  }
+
+  .button-calculate {
+    width: 100%;
+    margin-bottom: 35px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .card1 {
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-content: center;
+
+  }
+
+
+  .Right {
+    background-color: transparent;
+    margin-left: 3%;
+  }
+
+  .desing {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .scotiabank {
+    display: flex;
+    background-color: #ffb0b6;
+  }
+
+  .interbank {
+    display: flex;
+    background-color: #a9ffb6;
+  }
+
+  .photo {
+    width: 140px;
+    height: 145px;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+  }
+
+  .card2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+
+  }
+
+  .mat-icon.favorite {
+    color: #E7104B;
+  }
+
+  .mat-icon.payment {
+    color: dimgray;
+  }
+
+  .bank1 {
+    width: 90%;
+    background-color: transparent;
+    margin-top: 2%;
+  }
+
+  .bank2 {
+    margin-top: 2%;
+    width: 90%;
+    background-color: transparent;
+  }
+
+  .title {
+    font-weight: bold;
+  }
+
+  .group1 {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+
+  }
+
+  .group2 {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+  }
+
+  .group3 {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+  }
+
+  .group4 {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+  }
+
+  .group5 {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+  }
+
+  .group6 {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+  }
+
+}
+@media all and (max-width: 1085px){
+  .home-content {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    align-items: center;
+    background-image: url("../../../assets/images/background.jpg");
+    background-size: 100% 100%;
+
+  }
+
+  .card-parent {
+    background-color: #E7104B;
+    color: white;
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-top: 3%;
+  }
+
+  .card-child {
+    display: grid;
+    border: 1px black solid;
+  }
+
+  .card-content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+
+  }
+
+  .columns1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .columns2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+  }
+
+  .mat-form-field {
+    width: 200px;
+  }
+
+  .button-calculate {
+    width: 100%;
+    margin-bottom: 35px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .card1 {
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-content: center;
+
+  }
+
+
+  .Right {
+    background-color: transparent;
+
+  }
+
+  .desing {
+    display: flex;
+    justify-content: center;
+  }
+
+  .scotiabank {
+    display: flex;
+    background-color: #ffb0b6;
+  }
+
+  .interbank {
+    display: flex;
+    background-color: #a9ffb6;
+  }
+
+  .photo {
+    width: 140px;
+    height: 145px;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+  }
+
+  .card2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+
+  }
+
+  .circle {
+    width: 30px;
+    height: 30px;
+  }
+
+  .mat-icon.favorite {
+    color: #E7104B;
+  }
+
+  .mat-icon.payment {
+    color: dimgray;
+  }
+
+  .bank1 {
+    width: 90%;
+    background-color: transparent;
+    margin-top: 2%;
+  }
+
+  .bank2 {
+    margin-top: 2%;
+    width: 90%;
+    background-color: transparent;
+  }
+
+  .title {
+    font-weight: bold;
+  }
+
+  .group1 {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+
+  }
+
+  .group2 {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+  }
+
+  .group3 {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+  }
+
+  .group4 {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+  }
+
+  .group5 {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+  }
+
+  .group6 {
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+  }
+
+
+}
+
+@media all and (max-width: 600px){
+  .home-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .card-parent {
+    width: 80%;
+
   }
   .mat-form-field{
     width: 150px;
@@ -74,20 +333,87 @@ table {
   .mat-card-title{
     font-size: 20px;
   }
-}
+  .card1{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+  }
+  .group4{
+    margin-top: 2%;
+  }
+  .group5{
+    margin-top: 2%;
+  }
+  .group6{
+    margin-top: 2%;
+  }
+  .photo{
+    display: none
+  }
+  .scotiabank {
+    display: flex;
+    flex-direction: column;
+    background-color: #ffb0b6;
+  }
 
-@media all and (max-width: 380px){
-  .home-content {
+  .interbank {
+    display: flex;
+    flex-direction: column;
+    background-color: #a9ffb6;
+  }
+  .card2{
+    display: flex;
+    flex-direction: row;
+  }
+  .Right{
+    display: flex;
     flex-direction: column;
     align-items: center;
   }
+}
+@media all and (max-width: 475px){
+  .home-content{
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
   .card-parent{
-    margin: 0;
+    margin-top: 3%;
+  }
+  .photo{
+    display: none
+  }
+  .Right{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+}
+@media all and (max-width: 380px){
+  .home-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+  }
+  .card-parent{
+    width: 85%;
   }
   .mat-form-field{
     width: 120px;
   }
   .mat-card-title{
     font-size: 16px;
+  }
+  .photo{
+    display: none
+  }
+  .Right{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 }

@@ -28,6 +28,7 @@ import {RatesApiService} from './services/rates-api.service';
 import {UserApiService} from './services/user-api.service';
 import {authInterceptorProviders} from './helpers/auth-interceptor';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatTooltipModule
   ],
   providers: [RatesApiService, UserApiService, authInterceptorProviders],
   bootstrap: [AppComponent]
