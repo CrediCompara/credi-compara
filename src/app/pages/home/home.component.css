@@ -38,6 +38,14 @@
 
   }
 
+  .favorite-button{
+    color: black;
+  }
+
+  .heart-choosen{
+    color: red;
+  }
+
   .mat-form-field {
     width: 80%;
   }

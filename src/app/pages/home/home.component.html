@@ -52,11 +52,9 @@
             </mat-form-field>
             <mat-form-field appearance="fill">
               <mat-label>Día de inicio de pago</mat-label>
-              <input matInput [matDatepicker]="picker">
-              <mat-datepicker-toggle matSuffix [for]="picker">
-                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-              </mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
+              <input matInput [min]="minDate" formControlName="initial_date" [matDatepicker]="dp3" disabled>
+              <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+              <mat-datepicker #dp3 disabled="false"></mat-datepicker>
             </mat-form-field>
             <mat-label>Cuota Inicial</mat-label>
             <mat-slider
@@ -67,8 +65,15 @@
               step="5"
               min="10"
               max="50"></mat-slider>
-            <button mat-raised-button color="accent" class="button-calculate" type="submit" [disabled]="calculateForm.invalid">Calcular</button>
+            <mat-form-field appearance="fill">
+              <mat-label>Tipo de Año</mat-label>
+              <mat-select formControlName="type_year" required>
+                <mat-option value="0">Ordinario</mat-option>
+                <mat-option value="1">Exacto</mat-option>
+              </mat-select>
+            </mat-form-field>
           </div>
+          <button mat-raised-button color="accent" class="button-calculate" type="submit" [disabled]="calculateForm.invalid">Calcular</button>
         </form>
       </mat-card-content>
     </mat-card>
@@ -106,9 +111,9 @@
           </div>
           <div class="card2">
             <button mat-icon-button matTooltip="Guardar resultado" (click)="handleSaveButton(i)">
-              <mat-icon>favorite</mat-icon>
+              <mat-icon [attr.id]="i">favorite</mat-icon>
             </button>
-            <button mat-icon-button  matTooltip="Ver calendario de cuotas">
+            <button mat-icon-button routerLink="/schedule"  matTooltip="Ver calendario de cuotas">
               <mat-icon>payments</mat-icon>
             </button>
           </div>
