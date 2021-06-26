@@ -8,7 +8,7 @@
             <mat-form-field appearance="fill">
               <mat-label>Valor del Activo a cotizar</mat-label>
               <span matPrefix>{{sol ? "S/" : "$"}}&nbsp;</span>
-              <input matInput formControlName="property_value" placeholder="2,500" required [(ngModel)]="mortgageData.property_value">
+              <input matInput formControlName="property_value" placeholder="2,500" required >
               <mat-error *ngIf="calculateForm.controls.property_value.touched && calculateForm.controls.property_value.invalid">
                 <span *ngIf="calculateForm.controls.property_value.errors?.required">Ingrese el valor de la propiedad</span>
                 <span *ngIf="calculateForm.controls.property_value.errors?.pattern">Solo se permiten valores numéricos</span>
@@ -23,9 +23,8 @@
                 <mat-option value="frances">Francés</mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-label>Plazo {{mortgageData.term ? mortgageData.term + " años" : ""}}</mat-label>
+            <mat-label>Plazo {{this.calculateForm.value.term ? this.calculateForm.value.term + " años" : ""}}</mat-label>
             <mat-slider
-              [(ngModel)]="mortgageData.term"
               formControlName="term"
               thumbLabel
               step="1"
@@ -34,8 +33,7 @@
               aria-label="units"></mat-slider>
             <mat-form-field appearance="fill">
               <mat-label>Moneda</mat-label>
-              <mat-select formControlName="currency"
-                          required [(ngModel)]="mortgageData.currency"
+              <mat-select formControlName="currency" required
                           (selectionChange)="handleSelectionChange($event)">
                 <mat-option value="sol">Soles</mat-option>
                 <mat-option value="dolar">Dólares</mat-option>
@@ -46,7 +44,7 @@
             <mat-form-field appearance="fill">
               <mat-label>Ingresos</mat-label>
               <span matPrefix>{{sol ? "S/" : "$"}}&nbsp;</span>
-              <input matInput formControlName="income" placeholder="S/ 1,000" required [(ngModel)]="mortgageData.incomes">
+              <input matInput formControlName="income" placeholder="S/ 1,000" required>
               <mat-error *ngIf="calculateForm.controls.income.touched && calculateForm.controls.income.invalid">
                 <span *ngIf="calculateForm.controls.income.errors?.required">Ingrese el valor de sus ingresos mensuales</span>
                 <span *ngIf="calculateForm.controls.income.errors?.pattern">Solo se permiten valores numéricos</span>
@@ -54,77 +52,38 @@
             </mat-form-field>
             <mat-form-field appearance="fill">
               <mat-label>Día de inicio de pago</mat-label>
-              <input matInput [matDatepicker]="picker">
-              <mat-datepicker-toggle matSuffix [for]="picker">
-                <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-              </mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
+              <input matInput [min]="minDate" formControlName="initial_date" [matDatepicker]="dp3" disabled>
+              <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+              <mat-datepicker #dp3 disabled="false"></mat-datepicker>
             </mat-form-field>
             <mat-label>Cuota Inicial</mat-label>
             <mat-slider
-              required [(ngModel)]="mortgageData.initial_fee"
+              required
               [displayWith]="formatSliderInitialFee"
               formControlName="initial_fee"
               thumbLabel
               step="5"
               min="10"
               max="50"></mat-slider>
-            <button mat-raised-button color="accent" class="button-calculate" type="submit" [disabled]="calculateForm.invalid">Calcular</button>
+            <mat-form-field appearance="fill">
+              <mat-label>Tipo de Año</mat-label>
+              <mat-select formControlName="type_year" required>
+                <mat-option value="0">Ordinario</mat-option>
+                <mat-option value="1">Exacto</mat-option>
+              </mat-select>
+            </mat-form-field>
           </div>
+          <button mat-raised-button color="accent" class="button-calculate" type="submit" [disabled]="calculateForm.invalid">Calcular</button>
         </form>
       </mat-card-content>
     </mat-card>
   </mat-card>
-  <div class="Right" >
+  <div class="Right" *ngIf="isFill">
     <div class="bank1">
-      <div class="desing" *ngIf="isFill">
-        <img class="photo" src="https://media.discordapp.net/attachments/700237020278030396/857754171100364820/descarga.png" >
-        <mat-card class="scotiabank">
-          <div class="card1" *ngFor="let d of dataSourceList" align="center">
-          <div class="group1">
-            <div class="title">Cuota Mensual</div>
-            <div> {{d.monthly_fee}} </div>
-          </div>
-          <div class="group2">
-            <div class="title">TCEA</div>
-            <div> {{d.tcea}} </div>
-          </div>
-          <div class="group3">
-            <div class="title">Valor de propiedad</div>
-            <div> {{d.property_value}} </div>
-          </div>
-
-          <div class="group4">
-            <div class="title">Moneda</div>
-            <div > {{d.currency}} </div>
-          </div>
-
-          <div class="group5">
-            <div class="title">Plazo</div>
-            <div> {{d.term}} </div>
-          </div>
-          <div class="group6">
-            <div class="title">Cuota inicial</div>
-            <div> {{d.initial_fee}} </div>
-          </div>
-
-        </div>
-          <div class="card2">
-            <button mat-icon-button matTooltip="Guardar resultado">
-              <mat-icon>favorite</mat-icon>
-            </button>
-            <button mat-icon-button  matTooltip="Ver calendario de cuotas">
-              <mat-icon>payments</mat-icon>
-            </button>
-          </div>
-        </mat-card>
-      </div>
-    </div >
-    <div class="bank1">
-      <div class="desing" *ngIf="isFill">
-        <img class="photo" src="https://media.discordapp.net/attachments/700237020278030396/857754171100364820/descarga.png" >
-        <mat-card class="scotiabank">
-          <div class="card1" *ngFor="let d of dataSourceList" align="center">
+      <div class="desing" *ngFor="let d of dataSourceList; index as i" align="center">
+        <img class="photo" [src]="this.assetstList[i]" >
+        <mat-card [ngClass]="this.classList[i]">
+          <div class="card1">
             <div class="group1">
               <div class="title">Cuota Mensual</div>
               <div> {{d.monthly_fee}} </div>
@@ -137,120 +96,29 @@
               <div class="title">Valor de propiedad</div>
               <div> {{d.property_value}} </div>
             </div>
-
             <div class="group4">
               <div class="title">Moneda</div>
               <div > {{d.currency}} </div>
             </div>
-
             <div class="group5">
               <div class="title">Plazo</div>
               <div> {{d.term}} </div>
             </div>
             <div class="group6">
               <div class="title">Cuota inicial</div>
-              <div> {{d.initial_fee}} </div>
+              <div> {{d.initial_fee}}% </div>
             </div>
-
           </div>
           <div class="card2">
-            <button mat-icon-button matTooltip="Guardar resultado">
-              <mat-icon>favorite</mat-icon>
+            <button mat-icon-button matTooltip="Guardar resultado" (click)="handleSaveButton(i)">
+              <mat-icon [attr.id]="i">favorite</mat-icon>
             </button>
-            <button mat-icon-button  matTooltip="Ver calendario de cuotas">
+            <button mat-icon-button routerLink="/schedule"  matTooltip="Ver calendario de cuotas">
               <mat-icon>payments</mat-icon>
             </button>
           </div>
         </mat-card>
       </div>
     </div >
-    <div class="bank2">
-      <div class="desing" *ngIf="isFill">
-        <img class="photo" src="https://media.discordapp.net/attachments/700237020278030396/857759468213239808/g3Hf8K9b_400x400.jpg" >
-        <mat-card class="interbank">
-          <div class="card1" *ngFor="let d of dataSourceList" align="center">
-          <div class="group1">
-            <div class="title">Cuota Mensual</div>
-            <div> {{d.monthly_fee}} </div>
-          </div>
-          <div class="group2">
-            <div class="title">TCEA</div>
-            <div> {{d.tcea}} </div>
-          </div>
-          <div class="group3">
-            <div class="title">Valor de propiedad</div>
-            <div> {{d.property_value}} </div>
-          </div>
-
-          <div class="group4">
-            <div class="title">Moneda</div>
-            <div > {{d.currency}} </div>
-          </div>
-
-          <div class="group5">
-            <div class="title">Plazo</div>
-            <div> {{d.term}} </div>
-          </div>
-          <div class="group6">
-            <div class="title">Cuota inicial</div>
-            <div> {{d.initial_fee}} </div>
-          </div>
-
-        </div>
-          <div class="card2">
-            <button mat-icon-button matTooltip="Guardar resultado">
-              <mat-icon class="favorite">favorite</mat-icon>
-            </button>
-            <button mat-icon-button  matTooltip="Ver calendario de cuotas">
-              <mat-icon class="payment">payments</mat-icon>
-            </button>
-          </div>
-        </mat-card>
-      </div>
-    </div>
-    <div class="bank2">
-      <div class="desing" *ngIf="isFill">
-        <img class="photo" src="https://media.discordapp.net/attachments/700237020278030396/857759468213239808/g3Hf8K9b_400x400.jpg" >
-        <mat-card class="interbank">
-          <div class="card1" *ngFor="let d of dataSourceList" align="center">
-            <div class="group1">
-              <div class="title">Cuota Mensual</div>
-              <div> {{d.monthly_fee}} </div>
-            </div>
-            <div class="group2">
-              <div class="title">TCEA</div>
-              <div> {{d.tcea}} </div>
-            </div>
-            <div class="group3">
-              <div class="title">Valor de propiedad</div>
-              <div> {{d.property_value}} </div>
-            </div>
-
-            <div class="group4">
-              <div class="title">Moneda</div>
-              <div > {{d.currency}} </div>
-            </div>
-
-            <div class="group5">
-              <div class="title">Plazo</div>
-              <div> {{d.term}} </div>
-            </div>
-            <div class="group6">
-              <div class="title">Cuota inicial</div>
-              <div> {{d.initial_fee}} </div>
-            </div>
-
-          </div>
-          <div class="card2">
-            <button mat-icon-button matTooltip="Guardar resultado">
-              <mat-icon>favorite</mat-icon>
-            </button>
-            <button mat-icon-button  matTooltip="Ver calendario de cuotas">
-              <mat-icon>payments</mat-icon>
-            </button>
-          </div>
-        </mat-card>
-      </div>
-    </div>
   </div>
 </div>

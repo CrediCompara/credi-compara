@@ -159,7 +159,6 @@ export class Calculate {
   //cuota_inicial: number = 0.20;
   //n_anios: number = 15;
   frecuencia_de_pago: number = 30;
-  n_dias_anio: number =  360;
   tasa_desgravamen: number = 0.05000/100;
   tasa_seguro_riesgo: number = 0.3/100;
   //tea: number = 0.10;
@@ -172,6 +171,7 @@ export class Calculate {
   cuotas: number[] = [];
   amortizacion: number[] = [];
   tcea: number = 0.0;
+  fechas_de_pago: Date[] = [];
 
 
   pmt (rate:number, nper:number, pv:number, fv:number, type:number): number {
@@ -187,13 +187,14 @@ export class Calculate {
   }
 
   french_method(precio_venta_activo: number, cuota_inicial: number,
-                n_anios: number, tea: number): void{
+                n_anios: number, tea: number, n_dias_anio:number, initial_date: Date): void{
     // Clear arrays
     this.cuotas = [];
     this.amortizacion = [];
+    this.fechas_de_pago = [];
 
     // Required calculations
-    let numero_cuotas_anio = this.n_dias_anio/this.frecuencia_de_pago;
+    let numero_cuotas_anio = n_dias_anio/this.frecuencia_de_pago;
     let saldo_financiar = precio_venta_activo - precio_venta_activo*cuota_inicial;
     let total_cuotas = numero_cuotas_anio * n_anios;
     let segRies = this.tasa_seguro_riesgo * precio_venta_activo/numero_cuotas_anio;
@@ -209,13 +210,21 @@ export class Calculate {
     let segDes = 0;
     let segRisk = 0;
     let flujo = saldo_financiar;
+
     for(let nc = 1; nc <= total_cuotas; nc++) {
       flujos.push(flujo);
-      tep = Math.pow(1+tea, this.frecuencia_de_pago/this.n_dias_anio) - 1;
+      tep = Math.pow(1+tea, this.frecuencia_de_pago/n_dias_anio) - 1;
       if(nc == 1){
+        const newDate = new Date();
+        newDate.setDate(initial_date.getDate());
+        this.fechas_de_pago.push(newDate);
         saldo_inicial = saldo_financiar;
       }
       else {
+        const newDate = this.fechas_de_pago[this.fechas_de_pago.length - 1];
+        newDate.setDate(initial_date.getDate() + this.frecuencia_de_pago);
+        console.log(nc, newDate);
+        this.fechas_de_pago.push(newDate);
         saldo_inicial = saldo_final;
       }
       interes = -saldo_inicial * tep;
