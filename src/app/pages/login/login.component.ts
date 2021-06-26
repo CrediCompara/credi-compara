@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators} from "@angular/forms";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Router } from "@angular/router";
+import {AuthService} from 'src/app/services/auth.service';
+import {TokenStorageService} from 'src/app/services/token-storage.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -11,32 +13,57 @@ export class LoginComponent implements OnInit {
 
   form: FormGroup;
   loading: boolean = false;
+  isLoggedIn: boolean = false;
+  isLoginFailed: boolean = false;
+  roles: string[] = [];
 
-  constructor(private fb: FormBuilder, private _snackBar: MatSnackBar, private router: Router) {
+  constructor(private fb: FormBuilder,
+              private _snackBar: MatSnackBar,
+              private router: Router,
+              private authService: AuthService,
+              private tokenStorageService: TokenStorageService) {
     this.form = this.fb.group({
-      user: ['', Validators.required],
+      username: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
   }
 
   ngOnInit(): void {
+    if (this.tokenStorageService.getToken()){
+      this.isLoggedIn = true;
+      this.roles = this.tokenStorageService.getUser().roles;
+    }
+  }
+
+  reloadPage(): void {
+    window.location.reload();
   }
 
   ingresar(): void {
-    const user = this.form.value.user;
-    const password = this.form.value.password;
-
-    if (user == 'miguel' && password == '123456789') {
-      console.log("Se logeo correctamente");
-      this.loading = true;
-      this.fakeLoading();
+    if(this.form.invalid){
+      return;
     }
-    else {
-      console.log("Se logeo incorrectamente");
-      this.error();
-      this.loading = false;
-      this.form.reset();
-    }
+    this.loading = true;
+    this.authService.login(this.form.value).subscribe(
+      (data) => {
+        this.tokenStorageService.saveToken(data.token);
+        this.tokenStorageService.saveUser(data.user);
+        this.isLoginFailed = false;
+        this.isLoggedIn = true;
+        this.roles = this.tokenStorageService.getUser().roles;
+        return this.router.navigate(['/home']).then(()=>{
+          window.location.reload();
+        });
+      },
+      error => {
+        console.log(error.error.errorMessage);
+        this.error();
+        this.loading = false;
+        this.isLoginFailed = true;
+        this.isLoggedIn = false;
+        this.form.reset();
+      }
+    );
   }
 
   error(): void {

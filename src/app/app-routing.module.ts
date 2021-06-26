@@ -3,10 +3,14 @@ import { RouterModule, Routes } from '@angular/router';
 import {HomeComponent} from './pages/home/home.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {LoginComponent} from "./pages/login/login.component";
-import {MatTooltipModule} from '@angular/material/tooltip';
+import {NotFoundComponent} from './pages/not-found/not-found.component';
+import {SignupComponent} from "./pages/signup/signup.component";
+
 const routes: Routes = [
-  { path: 'home-component', component: HomeComponent },
-  { path: 'login', component: LoginComponent }
+  { path: 'home', component: HomeComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'signup', component: SignupComponent },
+  { path: '**', component: NotFoundComponent }
 ];
 
 @NgModule({
