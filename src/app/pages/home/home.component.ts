@@ -24,7 +24,8 @@ export class HomeComponent implements OnInit {
   scotia_img: string = "../../../assets/images/scotia.png";
   interb_img: string = "../../../assets/images/interb.jpg";
   typer_years: number[] = [360, 365];
-  minDate = new Date();
+  minDate: Date;
+  maxDate: Date;
   rateList: Rates[]=[]
   sol: Boolean = true;
   isFill: Boolean = false;
@@ -35,6 +36,9 @@ export class HomeComponent implements OnInit {
               private userApi: UserApiService, private tokenStorage: TokenStorageService,
               private _snackBar: MatSnackBar,
              ) {
+    this.minDate = new Date();
+    this.minDate = new Date(this.minDate.getFullYear(), 0, 1);
+    this.maxDate = new Date(this.minDate.getFullYear(), 12, 0);
     this.calculate = new Calculate();
     this.calculateForm = this.formBuilder.group({
       property_value: [null, [Validators.required, Validators.min(1000), Validators.pattern(this.onlyNumberPattern)]],
@@ -55,10 +59,10 @@ export class HomeComponent implements OnInit {
     this.dataSourceList = [];
     this.assetstList = [];
     this.listNumber =[];
+
+    this.classList = [];
     this.getRates();
     this.isFill = true;
-
-
   }
 
   onCalculate(income: number, initial_fee:number,method: string,
@@ -88,33 +92,24 @@ export class HomeComponent implements OnInit {
         // Max Rate
         this.calculate.french_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency);
-
         break;
       }
       case "aleman": {
         // Min Rate
-        console.log(rate.min_rate)
-        console.log(rate)
         this.calculate.german_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency);
         // Max Rate
         this.calculate.german_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency);
-
-
         break;
       }
       case "americano": {
         // Min Rate
-        console.log(rate.min_rate)
-        console.log(rate)
         this.calculate.american_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency);
         // Max Rate
         this.calculate.american_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency);
-
-
         break;
       }
       default: {
@@ -147,16 +142,14 @@ export class HomeComponent implements OnInit {
     const initial_date: Date = this.calculateForm.value.initial_date;
     this.ratesApi.getRateByValueAndFeeValue(term, property_value, currency).subscribe((res: Rates[]) => {
       res.forEach(rate => {
-
         this.onCalculate(income, initial_fee, method, property_value, term, rate, currency, n_dias_anio, initial_date);
-
+        console.log(rate);
       })
     },
     error =>{
       this.error();
       this.calculateForm.reset();
-    }
-      );
+    });
   }
 
   handleSaveButton(index: number): void{
