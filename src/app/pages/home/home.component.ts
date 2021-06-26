@@ -86,10 +86,10 @@ export class HomeComponent implements OnInit {
         // Min Rate
         console.log(rate.min_rate)
         console.log(rate)
-        this.calculate.german_method(property_value, initial_fee/100, term, rate.min_rate/100);
+        this.calculate.german_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency);
         // Max Rate
-        this.calculate.german_method(property_value, initial_fee/100, term, rate.max_rate/100);
+        this.calculate.german_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency);
 
 
@@ -99,10 +99,10 @@ export class HomeComponent implements OnInit {
         // Min Rate
         console.log(rate.min_rate)
         console.log(rate)
-        this.calculate.american_method(property_value, initial_fee/100, term, rate.min_rate/100);
+        this.calculate.american_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency);
         // Max Rate
-        this.calculate.american_method(property_value, initial_fee/100, term, rate.max_rate/100);
+        this.calculate.american_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency);
 
 
