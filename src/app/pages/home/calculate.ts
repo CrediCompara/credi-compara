@@ -240,13 +240,13 @@ export class Calculate {
   }
 
   german_method(precio_venta_activo: number, cuota_inicial: number,
-                n_anios: number, tea: number): void {
+                n_anios: number, tea: number,  n_dias_anio: number, initial_date: Date): void {
     // Clear arrays
     this.cuotas = [];
     this.amortizacion = [];
 
     // Required calculations
-    let numero_cuotas_anio = this.n_dias_anio / this.frecuencia_de_pago;
+    let numero_cuotas_anio = n_dias_anio / this.frecuencia_de_pago;
     let saldo_financiar = precio_venta_activo - precio_venta_activo * cuota_inicial;
     let total_cuotas = numero_cuotas_anio * n_anios;
     let segRies = this.tasa_seguro_riesgo * precio_venta_activo / numero_cuotas_anio;
@@ -262,20 +262,137 @@ export class Calculate {
     let segDes = 0;
     let segRisk = 0;
     let flujo = saldo_financiar;
+
+    console.log(flujo)
+
     for (let nc = 1; nc <= total_cuotas; nc++) {
       flujos.push(flujo);
-      tep = Math.pow(1 + tea, this.frecuencia_de_pago / this.n_dias_anio) - 1;
+      tep = Math.pow(1 + tea, this.frecuencia_de_pago / n_dias_anio) - 1;
       if (nc == 1) {
         saldo_inicial = saldo_financiar;
       } else {
         saldo_inicial = saldo_final;
       }
+
+      console.log(saldo_inicial, "saldo inicial")
       interes = -saldo_inicial * tep;
-      segDes = -(saldo_inicial * this.tasa_desgravamen);
-      amort_aux = cuota_aux - interes - segDes;
+      console.log(interes, "interes")
+      segDes = -saldo_inicial * this.tasa_desgravamen;
+      console.log(segDes, "seguro desgravamen");
+      amort_aux = -saldo_inicial/(total_cuotas - nc +1)
+      console.log(amort_aux, "amortización")
       this.amortizacion.push(parseFloat(amort_aux.toFixed(2)));
       segRisk = -segRies;
       cuota_aux = interes + amort_aux + segDes;
+      console.log(cuota_aux, "cuota");
+      this.cuotas.push(parseFloat(cuota_aux.toFixed(2)));
+      saldo_final = saldo_inicial + amort_aux;
+      flujo = cuota_aux + segRisk + segDes;
+    }
+  }
+
+  american_method(precio_venta_activo: number, cuota_inicial: number,
+                n_anios: number, tea: number,   n_dias_anio: number, initial_date: Date): void {
+    // Clear arrays
+    this.cuotas = [];
+    this.amortizacion = [];
+
+    // Required calculations
+    let numero_cuotas_anio = n_dias_anio / this.frecuencia_de_pago;
+    let saldo_financiar = precio_venta_activo - precio_venta_activo * cuota_inicial;
+    let total_cuotas = numero_cuotas_anio * n_anios;
+    let segRies = this.tasa_seguro_riesgo * precio_venta_activo / numero_cuotas_anio;
+
+
+    let tep = 0;
+    let saldo_inicial = 0;
+    let saldo_final = 0;
+    let interes = 0;
+    let cuota_aux = 0;
+    const flujos: number[] = [];
+    let amort_aux = 0;
+    let segDes = 0;
+    let segRisk = 0;
+    let flujo = saldo_financiar;
+    console.log(flujo)
+    for (let nc = 1; nc <= total_cuotas; nc++) {
+      flujos.push(flujo);
+      tep = Math.pow(1 + tea, this.frecuencia_de_pago / n_dias_anio) - 1;
+      if (nc == 1) {
+        saldo_inicial = saldo_financiar;
+      } else {
+        saldo_inicial = saldo_final;
+      }
+      console.log(saldo_inicial, "saldo inicial")
+      interes = -saldo_inicial * tep;
+      console.log(interes, "interes")
+      segDes = -saldo_inicial * this.tasa_desgravamen;
+      console.log(segDes, "seguro desgravamen");
+      if(nc == total_cuotas){
+        amort_aux = -saldo_inicial;
+        console.log(amort_aux, "amortización");
+      }
+      else{
+        amort_aux = 0;
+      }
+      this.amortizacion.push(parseFloat(amort_aux.toFixed(2)));
+      segRisk = -segRies;
+      cuota_aux = interes + amort_aux + segDes;
+      console.log(cuota_aux, "cuota");
+      this.cuotas.push(parseFloat(cuota_aux.toFixed(2)));
+      saldo_final = saldo_inicial + amort_aux;
+      flujo = cuota_aux + segRisk + segDes;
+    }
+  }
+
+  peruvian_method(precio_venta_activo: number, cuota_inicial: number,
+                n_anios: number, tea: number,   n_dias_anio: number, initial_date: Date): void {
+    // Clear arrays
+    this.cuotas = [];
+    this.amortizacion = [];
+
+    // Required calculations
+    let numero_cuotas_anio = n_dias_anio / this.frecuencia_de_pago;
+    let saldo_financiar = precio_venta_activo - precio_venta_activo * cuota_inicial;
+    let total_cuotas = numero_cuotas_anio * n_anios;
+    let segRies = this.tasa_seguro_riesgo * precio_venta_activo / numero_cuotas_anio;
+
+
+    let tep = 0;
+    let saldo_inicial = 0;
+    let saldo_final = 0;
+    let interes = 0;
+    let cuota_aux = 0;
+    const flujos: number[] = [];
+    let amort_aux = 0;
+    let segDes = 0;
+    let segRisk = 0;
+    let flujo = saldo_financiar;
+    console.log(flujo)
+    for (let nc = 1; nc <= total_cuotas; nc++) {
+      flujos.push(flujo);
+      tep = Math.pow(1 + tea, this.frecuencia_de_pago / n_dias_anio) - 1;
+      if (nc == 1) {
+        saldo_inicial = saldo_financiar;
+      } else {
+        saldo_inicial = saldo_final;
+      }
+      console.log(saldo_inicial, "saldo inicial")
+      interes = -saldo_inicial * tep;
+      console.log(interes, "interes")
+      segDes = -saldo_inicial * this.tasa_desgravamen;
+      console.log(segDes, "seguro desgravamen");
+      if(nc == total_cuotas){
+        amort_aux = -saldo_inicial;
+        console.log(amort_aux, "amortización");
+      }
+      else{
+        amort_aux = 0;
+      }
+      this.amortizacion.push(parseFloat(amort_aux.toFixed(2)));
+      segRisk = -segRies;
+      cuota_aux = interes + amort_aux + segDes;
+      console.log(cuota_aux, "cuota");
       this.cuotas.push(parseFloat(cuota_aux.toFixed(2)));
       saldo_final = saldo_inicial + amort_aux;
       flujo = cuota_aux + segRisk + segDes;
