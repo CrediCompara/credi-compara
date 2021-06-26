@@ -9,7 +9,6 @@ import {TokenStorageService} from './services/token-storage.service';
 })
 export class AppComponent implements OnInit {
   title = 'credi-compara';
-  private roles: string[] = [];
   isLoggedIn = false;
   username: string = '';
   constructor(private tokenStorageService: TokenStorageService,
@@ -19,8 +18,7 @@ export class AppComponent implements OnInit {
     this.isLoggedIn = !!this.tokenStorageService.getToken();
     if(this.isLoggedIn){
       const user = this.tokenStorageService.getUser();
-      this.roles = user.roles;
-      this.username = user.username;
+      this.username = user.first_name;
     }else{
       this.router.navigate(['/login']);
     }
