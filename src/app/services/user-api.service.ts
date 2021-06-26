@@ -39,8 +39,8 @@ export class UserApiService {
   }
 
   // Save MortgageCredit by User Id
-  saveMortgageCreditByUserId(item: any, id: number): Observable<MortgageCredit>{
-    return this.http.post<MortgageCredit>(`${this.basePath}/mortgages/users/${id}`, JSON.stringify(item), this.httpOptions)
+  saveMortgageCreditByUserId(item: any, id: number, id_bank: number): Observable<MortgageCredit>{
+    return this.http.post<MortgageCredit>(`${this.basePath}/mortgages/users/${id}/banks/${id_bank}`, JSON.stringify(item), this.httpOptions)
       .pipe(retry(2), catchError(this.handleError));
   }
 

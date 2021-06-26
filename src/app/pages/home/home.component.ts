@@ -25,10 +25,11 @@ export class HomeComponent implements OnInit {
   interb_img: string = "../../../assets/images/interb.jpg";
   typer_years: number[] = [360, 365];
   minDate = new Date();
-
+  rateList: Rates[]=[]
   sol: Boolean = true;
   isFill: Boolean = false;
   onlyNumberPattern: string = "^[0-9]*$";
+  listNumber: number[]=[]
 
   constructor(private formBuilder: FormBuilder, private ratesApi: RatesApiService,
               private userApi: UserApiService, private tokenStorage: TokenStorageService,
@@ -53,8 +54,11 @@ export class HomeComponent implements OnInit {
   onSubmit(): void {
     this.dataSourceList = [];
     this.assetstList = [];
+    this.listNumber =[]; 
     this.getRates();
     this.isFill = true;
+
+
   }
 
   onCalculate(income: number, initial_fee:number,method: string,
@@ -65,12 +69,17 @@ export class HomeComponent implements OnInit {
       this.assetstList.push(this.scotia_img);
       this.classList.push("scotiabank");
       this.classList.push("scotiabank");
-    }else{
+    }
+
+    else{
       this.assetstList.push(this.interb_img);
       this.assetstList.push(this.interb_img);
       this.classList.push("interbank");
       this.classList.push("interbank");
     }
+    this.listNumber.push(rate.bank_id);
+    this.listNumber.push(rate.bank_id);
+
     switch(method) {
       case "frances": {
         // Min Rate
@@ -151,10 +160,10 @@ export class HomeComponent implements OnInit {
   }
 
   handleSaveButton(index: number): void{
-    const button_heart = document.getElementById(index.toString());
+    const button_heart = document.getElementById(index.toString())
     if (button_heart != null){
       if(button_heart.textContent === "favorite"){
-          this.userApi.saveMortgageCreditByUserId(this.dataSourceList[index], this.tokenStorage.getUser().id).subscribe((res: MortgageCredit) => {
+          this.userApi.saveMortgageCreditByUserId(this.dataSourceList[index], this.tokenStorage.getUser().id, this.listNumber[index]).subscribe((res: MortgageCredit) => {
             this.dataSourceList[index].id = res.id;
             button_heart.innerText = "check_circle";
           })
