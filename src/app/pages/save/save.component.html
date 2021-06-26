@@ -1,0 +1,43 @@
+<mat-card>
+  <div class="bank1">
+    <div class="desing" *ngFor="let d of dataSourceList; index as i" align="center">
+      <img class="photo" [src]="this.assetstList[i]" >
+      <mat-card [ngClass]="this.classList[i]">
+        <div class="card1">
+          <div class="group1">
+            <div class="title">Cuota Mensual</div>
+            <div> {{d.monthly_fee}} </div>
+          </div>
+          <div class="group2">
+            <div class="title">TCEA</div>
+            <div> {{d.tcea}} </div>
+          </div>
+          <div class="group3">
+            <div class="title">Valor de propiedad</div>
+            <div> {{d.property_value}} </div>
+          </div>
+          <div class="group4">
+            <div class="title">Moneda</div>
+            <div > {{d.currency}} </div>
+          </div>
+          <div class="group5">
+            <div class="title">Plazo</div>
+            <div> {{d.term}} </div>
+          </div>
+          <div class="group6">
+            <div class="title">Cuota inicial</div>
+            <div> {{d.initial_fee}}% </div>
+          </div>
+        </div>
+        <div class="card2">
+          <button mat-icon-button matTooltip="Guardar resultado" (click)="handleSaveButton(i)">
+            <mat-icon [attr.id]="i">favorite</mat-icon>
+          </button>
+          <button mat-icon-button routerLink="/schedule"  matTooltip="Ver calendario de cuotas">
+            <mat-icon>payments</mat-icon>
+          </button>
+        </div>
+      </mat-card>
+    </div>
+  </div >
+</mat-card>

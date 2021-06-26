@@ -34,7 +34,6 @@ export class SignupComponent implements OnInit {
   }
 
   createUser(): void {
-    console.log(this.userData);
     this.userData.email = this.registerForm.value.email;
     this.userData.password = this.registerForm.value.password;
     this.userData.first_name = this.registerForm.value.name;
