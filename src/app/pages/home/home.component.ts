@@ -54,7 +54,7 @@ export class HomeComponent implements OnInit {
   onSubmit(): void {
     this.dataSourceList = [];
     this.assetstList = [];
-    this.listNumber =[]; 
+    this.listNumber =[];
     this.getRates();
     this.isFill = true;
 
