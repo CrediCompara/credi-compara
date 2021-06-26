@@ -1,0 +1,6 @@
+{
+  "rates": [
+    { "id": 1, "minRate": 7.0, "maxRate": 12.5, "bank_id": 1, "term_id": 1, "value_id": 1 },
+    { "id": 25, "maxRate": 13.94, "minRate": 8.3, "bank_id": 2, "term_id": 3, "value_id": 5 }
+  ]
+}
