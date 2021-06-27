@@ -78,8 +78,9 @@
       </mat-card-content>
     </mat-card>
   </mat-card>
-  <div class="Right" *ngIf="isFill">
-    <div class="bank1">
+  <div class="Right">
+    <mat-spinner *ngIf="isLoading" color="Warn" diameter="200"></mat-spinner>
+    <div class="bank1" *ngIf="isFill">
       <div class="desing" *ngFor="let d of dataSourceList; index as i" align="center">
         <img class="photo" [src]="this.assetstList[i]" >
         <mat-card [ngClass]="this.classList[i]">

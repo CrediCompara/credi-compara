@@ -31,6 +31,7 @@ export class HomeComponent implements OnInit {
   isFill: Boolean = false;
   onlyNumberPattern: string = "^[0-9]*$";
   listNumber: number[]=[]
+  isLoading: Boolean = false;
 
   constructor(private formBuilder: FormBuilder, private ratesApi: RatesApiService,
               private userApi: UserApiService, private tokenStorage: TokenStorageService,
@@ -68,7 +69,6 @@ export class HomeComponent implements OnInit {
   onCalculate(income: number, initial_fee:number,method: string,
               property_value:number, term:number, rate: Rates,
               currency:string, n_dias_anio: number, initial_date: Date): void{
-    console.log(initial_date)
     if(rate.bank_id == 1){
       this.assetstList.push(this.scotia_img);
       this.assetstList.push(this.scotia_img);
@@ -120,8 +120,6 @@ export class HomeComponent implements OnInit {
       }
       case "peruano": {
         // Min Rate
-        console.log(rate.min_rate)
-        console.log(rate)
         this.calculate.peruvian_method_two(property_value, initial_fee/100, term, rate.min_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency, rate.min_rate);
         // Max Rate
@@ -158,10 +156,11 @@ export class HomeComponent implements OnInit {
     const term = this.calculateForm.value.term;
     const n_dias_anio = this.typer_years[parseInt(this.calculateForm.value.type_year)];
     const initial_date: Date = this.calculateForm.value.initial_date;
+    this.isLoading = true;
     this.ratesApi.getRateByValueAndFeeValue(term, property_value, currency).subscribe((res: Rates[]) => {
       res.forEach(rate => {
+        this.isLoading = false;
         this.onCalculate(income, initial_fee, method, property_value, term, rate, currency, n_dias_anio, initial_date);
-        console.log(rate);
       })
     },
     error =>{
@@ -179,7 +178,6 @@ export class HomeComponent implements OnInit {
             button_heart.innerText = "check_circle";
           })
       }else{
-        console.log(button_heart.textContent);
         this.userApi.deleteMortgageCreditByUserId(this.dataSourceList[index].id).subscribe((res: any) => {
           button_heart.innerText = "favorite";
         })
