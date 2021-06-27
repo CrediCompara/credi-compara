@@ -10,7 +10,7 @@ import { retry, catchError } from 'rxjs/operators';
 export class RatesApiService {
 
   // Rate Endpoint
-  basePath="http://credicompara.azurewebsites.net/api/rates";
+  basePath="https://credicompara.azurewebsites.net/api/rates";
   httpOptions={ headers: new HttpHeaders({'Content-Type': 'application/json'})}
 
   constructor(private http: HttpClient) {  }
