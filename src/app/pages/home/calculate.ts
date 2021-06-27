@@ -223,7 +223,6 @@ export class Calculate {
       else {
         const newDate = this.fechas_de_pago[this.fechas_de_pago.length - 1];
         newDate.setDate(initial_date.getDate() + this.frecuencia_de_pago);
-        console.log(nc, newDate);
         this.fechas_de_pago.push(newDate);
         saldo_inicial = saldo_final;
       }
@@ -263,7 +262,6 @@ export class Calculate {
     let segRisk = 0;
     let flujo = saldo_financiar;
 
-    console.log(flujo)
 
     for (let nc = 1; nc <= total_cuotas; nc++) {
       flujos.push(flujo);
@@ -274,17 +272,12 @@ export class Calculate {
         saldo_inicial = saldo_final;
       }
 
-      console.log(saldo_inicial, "saldo inicial")
       interes = -saldo_inicial * tep;
-      console.log(interes, "interes")
       segDes = -saldo_inicial * this.tasa_desgravamen;
-      console.log(segDes, "seguro desgravamen");
       amort_aux = -saldo_inicial/(total_cuotas - nc +1)
-      console.log(amort_aux, "amortización")
       this.amortizacion.push(parseFloat(amort_aux.toFixed(2)));
       segRisk = -segRies;
       cuota_aux = interes + amort_aux + segDes;
-      console.log(cuota_aux, "cuota");
       this.cuotas.push(parseFloat(cuota_aux.toFixed(2)));
       saldo_final = saldo_inicial + amort_aux;
       flujo = cuota_aux + segRisk + segDes;
@@ -314,7 +307,6 @@ export class Calculate {
     let segDes = 0;
     let segRisk = 0;
     let flujo = saldo_financiar;
-    console.log(flujo)
     for (let nc = 1; nc <= total_cuotas; nc++) {
       flujos.push(flujo);
       tep = Math.pow(1 + tea, this.frecuencia_de_pago / n_dias_anio) - 1;
@@ -323,14 +315,10 @@ export class Calculate {
       } else {
         saldo_inicial = saldo_final;
       }
-      console.log(saldo_inicial, "saldo inicial")
       interes = -saldo_inicial * tep;
-      console.log(interes, "interes")
       segDes = -saldo_inicial * this.tasa_desgravamen;
-      console.log(segDes, "seguro desgravamen");
       if(nc == total_cuotas){
         amort_aux = -saldo_inicial;
-        console.log(amort_aux, "amortización");
       }
       else{
         amort_aux = 0;
@@ -338,7 +326,6 @@ export class Calculate {
       this.amortizacion.push(parseFloat(amort_aux.toFixed(2)));
       segRisk = -segRies;
       cuota_aux = interes + amort_aux + segDes;
-      console.log(cuota_aux, "cuota");
       this.cuotas.push(parseFloat(cuota_aux.toFixed(2)));
       saldo_final = saldo_inicial + amort_aux;
       flujo = cuota_aux + segRisk + segDes;
@@ -368,7 +355,6 @@ export class Calculate {
     let segDes = 0;
     let segRisk = 0;
     let flujo = saldo_financiar;
-    console.log(flujo)
     for (let nc = 1; nc <= total_cuotas; nc++) {
       flujos.push(flujo);
       tep = Math.pow(1 + tea, this.frecuencia_de_pago / n_dias_anio) - 1;
@@ -377,14 +363,10 @@ export class Calculate {
       } else {
         saldo_inicial = saldo_final;
       }
-      console.log(saldo_inicial, "saldo inicial")
       interes = -saldo_inicial * tep;
-      console.log(interes, "interes")
       segDes = -saldo_inicial * this.tasa_desgravamen;
-      console.log(segDes, "seguro desgravamen");
       if(nc == total_cuotas){
         amort_aux = -saldo_inicial;
-        console.log(amort_aux, "amortización");
       }
       else{
         amort_aux = 0;
@@ -392,7 +374,6 @@ export class Calculate {
       this.amortizacion.push(parseFloat(amort_aux.toFixed(2)));
       segRisk = -segRies;
       cuota_aux = interes + amort_aux + segDes;
-      console.log(cuota_aux, "cuota");
       this.cuotas.push(parseFloat(cuota_aux.toFixed(2)));
       saldo_final = saldo_inicial + amort_aux;
       flujo = cuota_aux + segRisk + segDes;
