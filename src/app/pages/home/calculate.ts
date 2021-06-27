@@ -1,5 +1,5 @@
 import {Finance} from 'financejs'
-import {irr} from 'node-irr'
+import {irr} from 'financial'
 
 
 export class Calculate {
@@ -34,26 +34,34 @@ export class Calculate {
     }
   }
 
-  IRRCalc(CArray: number[]) {
+
+
+  IRRCalc(CArray: number[], guest: number) {
+
     let min = 0.0;
     let max = 1.0;
-    let NPV = 0;
-    let guest = 0;
+    let c=0;
+    let NPV =0;
     do {
       guest = (min + max) / 2;
       NPV = 0;
       for (var j=0; j<CArray.length; j++) {
-            NPV += CArray[j]/Math.pow((1+guest),j);
+          NPV += CArray[j]/Math.pow((1+guest),j);
       }
       if (NPV > 0) {
         min = guest;
+        c++;
       }
       else {
         max = guest;
+        c++;
       }
+
+      if(c>=2){ return guest*100; }
     } while(Math.abs(NPV) > 0.000001);
-    return guest * 100;
+    return guest*100;
   }
+
 
   french_method(precio_venta_activo: number, cuota_inicial: number,
                 n_anios: number, tea: number, n_dias_anio:number, initial_date: Date): void{
@@ -111,6 +119,14 @@ export class Calculate {
       flujos.push(flujo);
     }
 
+
+    let tirr = irr(flujos, 0.01);
+    console.log(tirr, "hola")
+    this.tcea = (Math.pow(1+tirr, numero_cuotas_anio)-1) * 100
+    console.log(this.tcea, tirr, numero_cuotas_anio, "TCEA")
+
+    this.tcea = parseFloat(this.tcea.toFixed(3))
+
   }
 
   german_method(precio_venta_activo: number, cuota_inicial: number,
@@ -118,6 +134,7 @@ export class Calculate {
     // Clear arrays
     this.cuotas = [];
     this.amortizacion = [];
+    this.fechas_de_pago = [];
 
     // Required calculations
     let numero_cuotas_anio = n_dias_anio / this.frecuencia_de_pago;
@@ -163,11 +180,12 @@ export class Calculate {
       flujos.push(flujo);
     }
 
-    let tirr = this.IRRCalc(flujos);
-    this.tcea = Math.pow(1+tirr, numero_cuotas_anio)-1;
+    let tirr = irr(flujos, 0.01);
+    console.log(tirr, "hola")
+    this.tcea = (Math.pow(1+tirr, numero_cuotas_anio)-1) * 100
+    console.log(this.tcea, tirr, numero_cuotas_anio, "TCEA")
 
-    this.tcea = parseFloat(this.tcea.toFixed(2))
-    tirr = 0;
+    this.tcea = parseFloat(this.tcea.toFixed(3))
   }
 
   american_method(precio_venta_activo: number, cuota_inicial: number,
@@ -175,6 +193,7 @@ export class Calculate {
     // Clear arrays
     this.cuotas = [];
     this.amortizacion = [];
+    this.fechas_de_pago = [];
 
     // Required calculations
     let numero_cuotas_anio = n_dias_anio / this.frecuencia_de_pago;
@@ -222,10 +241,13 @@ export class Calculate {
       flujos.push(flujo)
     }
 
-    let tirr = this.IRRCalc(flujos);
-    this.tcea = Math.pow(1+tirr, numero_cuotas_anio)-1;
+    let tirr = irr(flujos, 0.01);
+    console.log(tirr, "hola")
+    this.tcea = (Math.pow(1+tirr, numero_cuotas_anio)-1) * 100
+    console.log(this.tcea, tirr, numero_cuotas_anio, "TCEA")
 
-    this.tcea = parseFloat(this.tcea.toFixed(2))
+    this.tcea = parseFloat(this.tcea.toFixed(3))
+
   }
 
   peruvian_method(precio_venta_activo: number, cuota_inicial: number,
@@ -262,9 +284,9 @@ export class Calculate {
     console.log(flujo)
 
     for (let nc = 1; nc <= total_cuotas; nc++) {
-      flujos.push(flujo);
 
       if (nc == 1) {
+        flujos.push(flujo);
         saldo_inicial = saldo_financiar;
         const newDate = this.lastday(initial_date.getFullYear(), initial_date.getMonth()+1);
         this.fechas_de_pago.push(newDate);
@@ -293,6 +315,7 @@ export class Calculate {
       else{
         cuota_aux = -anualidad;
       }
+      cuota_aux = parseFloat(cuota_aux.toFixed(2));
       this.cuotas.push(cuota_aux);
 
       amort_aux = cuota_aux - interes;
@@ -303,10 +326,13 @@ export class Calculate {
       flujo = cuota_aux + segRisk + segDes;
       flujos.push(flujo)
     }
-    let tirr = this.IRRCalc(flujos);
-    this.tcea = Math.pow(1+tirr, numero_cuotas_anio)-1;
+    let tirr = irr(flujos, 0.01);
+    console.log(tirr, "hola")
+    this.tcea = (Math.pow(1+tirr, n_dias_anio/this.frecuencia_de_pago)-1) * 100
+    console.log(this.tcea, tirr, numero_cuotas_anio, "TCEA")
 
-    this.tcea = parseFloat(this.tcea.toFixed(2));
+    this.tcea = parseFloat(this.tcea.toFixed(3))
+
   }
   peruvian_method_two(precio_venta_activo: number, cuota_inicial: number,
                 n_anios: number, tea: number,   n_dias_anio: number, initial_date: Date): void {
@@ -339,10 +365,11 @@ export class Calculate {
     let factor_sum = 0;
 
     for (let nc = 1; nc <= total_cuotas; nc++) {
-      flujos.push(flujo);
 
       if (nc <= 1) {
         saldo_inicial = saldo_financiar;
+
+        flujos.push(flujo);
         const newDate = this.lastday(initial_date.getFullYear(), initial_date.getMonth()+1);
         this.fechas_de_pago.push(newDate);
       }
@@ -380,6 +407,8 @@ export class Calculate {
       else{
         cuota_aux = -anualidad;
       }
+
+      cuota_aux = parseFloat(cuota_aux.toFixed(2));
       this.cuotas.push(cuota_aux);
 
       amort_aux = cuota_aux - interes;
@@ -391,9 +420,12 @@ export class Calculate {
       flujos.push(flujo);
     }
 
-    let tirr = this.IRRCalc(flujos);
-    this.tcea = Math.pow(1+tirr, numero_cuotas_anio)-1;
-    this.tcea = parseFloat(this.tcea.toFixed(2))
+    let tirr = irr(flujos, 0.01);
+    console.log(tirr, "hola")
+    this.tcea = (Math.pow(1+tirr, n_dias_anio/this.frecuencia_de_pago)-1) * 100
+    console.log(this.tcea, tirr, numero_cuotas_anio, "TCEA")
+
+    this.tcea = parseFloat(this.tcea.toFixed(3))
   }
 
 }

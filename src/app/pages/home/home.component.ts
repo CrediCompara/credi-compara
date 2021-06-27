@@ -61,6 +61,7 @@ export class HomeComponent implements OnInit {
     this.assetstList = [];
     this.listNumber =[];
 
+
     this.classList = [];
     this.getRates();
     this.isFill = true;
