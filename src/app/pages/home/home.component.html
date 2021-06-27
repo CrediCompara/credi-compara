@@ -8,7 +8,7 @@
             <mat-form-field appearance="fill">
               <mat-label>Valor del Activo a cotizar</mat-label>
               <span matPrefix>{{sol ? "S/" : "$"}}&nbsp;</span>
-              <input matInput formControlName="property_value" placeholder="2,500" required >
+              <input matInput formControlName="property_value" placeholder="2,500" required>
               <mat-error *ngIf="calculateForm.controls.property_value.touched && calculateForm.controls.property_value.invalid">
                 <span *ngIf="calculateForm.controls.property_value.errors?.required">Ingrese el valor de la propiedad</span>
                 <span *ngIf="calculateForm.controls.property_value.errors?.pattern">Solo se permiten valores numéricos</span>
@@ -24,17 +24,10 @@
               </mat-select>
             </mat-form-field>
             <mat-label>Plazo {{this.calculateForm.value.term ? this.calculateForm.value.term + " años" : ""}}</mat-label>
-            <mat-slider
-              formControlName="term"
-              thumbLabel
-              step="1"
-              min="5"
-              max="50"
-              aria-label="units"></mat-slider>
+            <mat-slider formControlName="term" thumbLabel step="1" min="5" max="50" aria-label="units"></mat-slider>
             <mat-form-field appearance="fill">
               <mat-label>Moneda</mat-label>
-              <mat-select formControlName="currency" required
-                          (selectionChange)="handleSelectionChange($event)">
+              <mat-select formControlName="currency" required (selectionChange)="handleSelectionChange($event)">
                 <mat-option value="sol">Soles</mat-option>
                 <mat-option value="dolar">Dólares</mat-option>
               </mat-select>
@@ -57,14 +50,7 @@
               <mat-datepicker #dp3 disabled="false"></mat-datepicker>
             </mat-form-field>
             <mat-label>Cuota Inicial</mat-label>
-            <mat-slider
-              required
-              [displayWith]="formatSliderInitialFee"
-              formControlName="initial_fee"
-              thumbLabel
-              step="5"
-              min="10"
-              max="50"></mat-slider>
+            <mat-slider required [displayWith]="formatSliderInitialFee" formControlName="initial_fee" thumbLabel step="5" min="10" max="50"></mat-slider>
             <mat-form-field appearance="fill">
               <mat-label>Tipo de Año</mat-label>
               <mat-select formControlName="type_year" required>
@@ -81,7 +67,7 @@
   <div class="Right" *ngIf="isFill">
     <div class="bank1">
       <div class="desing" *ngFor="let d of dataSourceList; index as i" align="center">
-        <img class="photo" [src]="this.assetstList[i]" >
+        <img class="photo" [src]="this.assetstList[i]">
         <mat-card [ngClass]="this.classList[i]">
           <div class="card1">
             <div class="group1">
@@ -98,7 +84,7 @@
             </div>
             <div class="group4">
               <div class="title">Moneda</div>
-              <div > {{d.currency}} </div>
+              <div> {{d.currency}} </div>
             </div>
             <div class="group5">
               <div class="title">Plazo</div>
@@ -113,12 +99,19 @@
             <button mat-icon-button matTooltip="Guardar resultado" (click)="handleSaveButton(i)">
               <mat-icon [attr.id]="i">favorite</mat-icon>
             </button>
-            <button mat-icon-button routerLink="/schedule"  matTooltip="Ver calendario de cuotas">
+            <button mat-icon-button (click)="handleTabulation(i)" matTooltip="Ver calendario de cuotas">
               <mat-icon>payments</mat-icon>
             </button>
           </div>
         </mat-card>
       </div>
-    </div >
+    </div>
   </div>
 </div>
+
+<mat-card class="tabla" *ngIf="view_calendar">
+  <div>
+    <app-calendario-pagos [selected_tab_data]="selected_tab_data"> </app-calendario-pagos>
+  </div>
+  <br>
+</mat-card>

@@ -8,6 +8,7 @@ import {Calculate} from './calculate';
 import {UserApiService} from 'src/app/services/user-api.service';
 import {TokenStorageService} from 'src/app/services/token-storage.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {CalendarioPagosComponent} from './calendario-pagos/calendario-pagos.component'
 
 @Component({
   selector: 'app-home',
@@ -31,6 +32,14 @@ export class HomeComponent implements OnInit {
   isFill: Boolean = false;
   onlyNumberPattern: string = "^[0-9]*$";
   listNumber: number[]=[]
+
+  // Tabular calendario
+  dates_tab: Date[][]=[];
+  cuotas_tab: number[][]=[];
+  mortgage_tab: number[][]=[]
+  selected_tab_data: any[] = []
+
+  view_calendar: Boolean = false;
 
   constructor(private formBuilder: FormBuilder, private ratesApi: RatesApiService,
               private userApi: UserApiService, private tokenStorage: TokenStorageService,
@@ -88,9 +97,17 @@ export class HomeComponent implements OnInit {
         // Min Rate
         this.calculate.french_method(property_value, initial_fee/100, term, rate.min_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency);
+        this.dates_tab.push(this.calculate.fechas_de_pago)
+        this.cuotas_tab.push(this.calculate.cuotas)
+        this.mortgage_tab.push(this.calculate.amortizacion)
+
         // Max Rate
         this.calculate.french_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency);
+        this.dates_tab.push(this.calculate.fechas_de_pago)
+        this.cuotas_tab.push(this.calculate.cuotas)
+        this.mortgage_tab.push(this.calculate.amortizacion)
+
         break;
       }
       case "aleman": {
@@ -115,6 +132,9 @@ export class HomeComponent implements OnInit {
         break;
       }
     }
+    console.log('cuotas', this.cuotas_tab);
+    console.log('fechas de pago', this.dates_tab);
+    console.log('amortizacion', this.mortgage_tab);
   }
 
   nextCalculate(income: number, initial_fee:number,
@@ -142,7 +162,7 @@ export class HomeComponent implements OnInit {
     this.ratesApi.getRateByValueAndFeeValue(term, property_value, currency).subscribe((res: Rates[]) => {
       res.forEach(rate => {
         this.onCalculate(income, initial_fee, method, property_value, term, rate, currency, n_dias_anio, initial_date);
-        console.log(rate);
+        //console.log(rate);
       })
     },
     error =>{
@@ -166,6 +186,31 @@ export class HomeComponent implements OnInit {
         })
       }
     }
+  }
+
+  selectTabData(index: number): void{
+    this.selected_tab_data = []
+    for (let i = 0; i < this.cuotas_tab[index].length; i++) {
+      this.selected_tab_data.push({fecha: this.dates_tab[index][i].toISOString().slice(0, 10), cuota: this.cuotas_tab[index][i], amortizacion: this.mortgage_tab[index][i]})
+    }
+  }
+
+  current_index: number
+  handleTabulation(index: number): void{
+    this.selectTabData(index)
+    if (index == this.current_index && this.view_calendar == true){
+      this.view_calendar = false
+    }
+    else if (index == this.current_index && this.view_calendar == false){
+      this.view_calendar = true
+    }
+    else if (index != this.current_index && this.view_calendar == false){
+      this.view_calendar = true
+    }
+    else if (index != this.current_index && this.view_calendar == true){
+      this.view_calendar = false
+    }
+    this.current_index = index
   }
 
   error(): void {

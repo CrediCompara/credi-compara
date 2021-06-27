@@ -426,3 +426,9 @@
     align-items: center;
   }
 }
+
+.tabla {
+  text-align: center;
+  margin: 25px auto;
+  width: 40%;
+}

@@ -15,7 +15,9 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
+import { MatTable } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+//import { MatTableDataSource } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSelectModule } from '@angular/material/select';
@@ -32,6 +34,8 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import { SignupComponent } from './pages/signup/signup.component';
 import { SaveComponent } from './pages/save/save.component';
 
+import { CalendarioPagosComponent } from './pages/home/calendario-pagos/calendario-pagos.component'
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -40,6 +44,7 @@ import { SaveComponent } from './pages/save/save.component';
     NotFoundComponent,
     SignupComponent,
     SaveComponent,
+    CalendarioPagosComponent
   ],
   imports: [
     BrowserModule,
@@ -64,7 +69,8 @@ import { SaveComponent } from './pages/save/save.component';
     MatSnackBarModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatTooltipModule
+    MatTooltipModule,
+    //MatTableDataSource
   ],
   providers: [RatesApiService, UserApiService, authInterceptorProviders],
   bootstrap: [AppComponent]
