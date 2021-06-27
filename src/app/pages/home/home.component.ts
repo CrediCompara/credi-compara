@@ -60,6 +60,7 @@ export class HomeComponent implements OnInit {
     this.assetstList = [];
     this.listNumber =[];
 
+
     this.classList = [];
     this.getRates();
     this.isFill = true;
@@ -68,7 +69,6 @@ export class HomeComponent implements OnInit {
   onCalculate(income: number, initial_fee:number,method: string,
               property_value:number, term:number, rate: Rates,
               currency:string, n_dias_anio: number, initial_date: Date): void{
-    console.log(initial_date)
     if(rate.bank_id == 1){
       this.assetstList.push(this.scotia_img);
       this.assetstList.push(this.scotia_img);
