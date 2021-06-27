@@ -30,6 +30,7 @@ import {authInterceptorProviders} from './helpers/auth-interceptor';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
 import { SignupComponent } from './pages/signup/signup.component';
+import { SaveComponent } from './pages/save/save.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { SignupComponent } from './pages/signup/signup.component';
     LoginComponent,
     NotFoundComponent,
     SignupComponent,
+    SaveComponent,
   ],
   imports: [
     BrowserModule,

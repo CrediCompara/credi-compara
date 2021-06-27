@@ -52,7 +52,7 @@
             </mat-form-field>
             <mat-form-field appearance="fill">
               <mat-label>Día de inicio de pago</mat-label>
-              <input matInput [min]="minDate" formControlName="initial_date" [matDatepicker]="dp3" disabled>
+              <input matInput [min]="minDate" [max]="maxDate" formControlName="initial_date" [matDatepicker]="dp3" disabled>
               <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
               <mat-datepicker #dp3 disabled="false"></mat-datepicker>
             </mat-form-field>

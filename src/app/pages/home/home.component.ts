@@ -24,16 +24,21 @@ export class HomeComponent implements OnInit {
   scotia_img: string = "../../../assets/images/scotia.png";
   interb_img: string = "../../../assets/images/interb.jpg";
   typer_years: number[] = [360, 365];
-  minDate = new Date();
-
+  minDate: Date;
+  maxDate: Date;
+  rateList: Rates[]=[]
   sol: Boolean = true;
   isFill: Boolean = false;
   onlyNumberPattern: string = "^[0-9]*$";
+  listNumber: number[]=[]
 
   constructor(private formBuilder: FormBuilder, private ratesApi: RatesApiService,
               private userApi: UserApiService, private tokenStorage: TokenStorageService,
               private _snackBar: MatSnackBar,
              ) {
+    this.minDate = new Date();
+    this.minDate = new Date(this.minDate.getFullYear(), 0, 1);
+    this.maxDate = new Date(this.minDate.getFullYear(), 12, 0);
     this.calculate = new Calculate();
     this.calculateForm = this.formBuilder.group({
       property_value: [null, [Validators.required, Validators.min(1000), Validators.pattern(this.onlyNumberPattern)]],
@@ -53,6 +58,9 @@ export class HomeComponent implements OnInit {
   onSubmit(): void {
     this.dataSourceList = [];
     this.assetstList = [];
+    this.listNumber =[];
+
+    this.classList = [];
     this.getRates();
     this.isFill = true;
   }
@@ -66,12 +74,17 @@ export class HomeComponent implements OnInit {
       this.assetstList.push(this.scotia_img);
       this.classList.push("scotiabank");
       this.classList.push("scotiabank");
-    }else{
+    }
+
+    else{
       this.assetstList.push(this.interb_img);
       this.assetstList.push(this.interb_img);
       this.classList.push("interbank");
       this.classList.push("interbank");
     }
+    this.listNumber.push(rate.bank_id);
+    this.listNumber.push(rate.bank_id);
+
     switch(method) {
       case "frances": {
         // Min Rate
@@ -80,26 +93,22 @@ export class HomeComponent implements OnInit {
         // Max Rate
         this.calculate.french_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency);
-
         break;
       }
       case "aleman": {
         // Min Rate
-        console.log(rate.min_rate)
-        console.log(rate)
+
         this.calculate.german_method(property_value, initial_fee/100, term, rate.min_rate/100, n_dias_anio, initial_date);
+
         this.nextCalculate(income, initial_fee, property_value, term, currency);
         // Max Rate
         this.calculate.german_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency);
-
-
         break;
       }
       case "americano": {
         // Min Rate
-        console.log(rate.min_rate)
-        console.log(rate)
+
         this.calculate.american_method(property_value, initial_fee/100, term, rate.min_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency);
         // Max Rate
@@ -118,8 +127,6 @@ export class HomeComponent implements OnInit {
         // Max Rate
         this.calculate.peruvian_method_two(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency);
-
-
         break;
       }
       default: {
@@ -137,7 +144,7 @@ export class HomeComponent implements OnInit {
     mortgage.property_value = property_value;
     mortgage.monthly_fee = -(this.calculate.cuotas[this.calculate.cuotas.length-1]);
     mortgage.incomes = income;
-    mortgage.tcea = 11.0;
+    mortgage.tcea = this.calculate.tcea;
     this.dataSourceList.push(mortgage);
   }
 
@@ -152,23 +159,21 @@ export class HomeComponent implements OnInit {
     const initial_date: Date = this.calculateForm.value.initial_date;
     this.ratesApi.getRateByValueAndFeeValue(term, property_value, currency).subscribe((res: Rates[]) => {
       res.forEach(rate => {
-
         this.onCalculate(income, initial_fee, method, property_value, term, rate, currency, n_dias_anio, initial_date);
-
+        console.log(rate);
       })
     },
     error =>{
       this.error();
       this.calculateForm.reset();
-    }
-      );
+    });
   }
 
   handleSaveButton(index: number): void{
-    const button_heart = document.getElementById(index.toString());
+    const button_heart = document.getElementById(index.toString())
     if (button_heart != null){
       if(button_heart.textContent === "favorite"){
-          this.userApi.saveMortgageCreditByUserId(this.dataSourceList[index], this.tokenStorage.getUser().id).subscribe((res: MortgageCredit) => {
+          this.userApi.saveMortgageCreditByUserId(this.dataSourceList[index], this.tokenStorage.getUser().id, this.listNumber[index]).subscribe((res: MortgageCredit) => {
             this.dataSourceList[index].id = res.id;
             button_heart.innerText = "check_circle";
           })

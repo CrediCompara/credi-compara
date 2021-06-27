@@ -1,5 +1,5 @@
-//import { irr } "financejs";
-//import {Finance} from 'financejs'
+import {Finance} from 'financejs'
+import {irr} from 'node-irr'
 
 
 export class Calculate {
@@ -193,12 +193,37 @@ export class Calculate {
       return new Date(y, m + 1, 0);
     }
   }
+
+
+
+  IRRCalc(CArray: number[]) {
+    let min = 0.0;
+    let max = 1.0;
+    let NPV = 0;
+    let guest = 0;
+    do {
+      guest = (min + max) / 2;
+      NPV = 0;
+      for (var j=0; j<CArray.length; j++) {
+            NPV += CArray[j]/Math.pow((1+guest),j);
+      }
+      if (NPV > 0) {
+        min = guest;
+      }
+      else {
+        max = guest;
+      }
+    } while(Math.abs(NPV) > 0.000001);
+    return guest * 100;
+  }
+
   french_method(precio_venta_activo: number, cuota_inicial: number,
                 n_anios: number, tea: number, n_dias_anio:number, initial_date: Date): void{
     // Clear arrays
     this.cuotas = [];
     this.amortizacion = [];
     this.fechas_de_pago = [];
+    let finance = new Finance();
 
     // Required calculations
     let numero_cuotas_anio = n_dias_anio/this.frecuencia_de_pago;
@@ -219,16 +244,19 @@ export class Calculate {
     let flujo = saldo_financiar;
 
     for(let nc = 1; nc <= total_cuotas; nc++) {
-      flujos.push(flujo);
+
       tep = Math.pow(1+tea, this.frecuencia_de_pago/n_dias_anio) - 1;
       if(nc == 1){
+        flujos.push(flujo);
         const newDate = this.lastday(initial_date.getFullYear(), initial_date.getMonth()+1);
         this.fechas_de_pago.push(newDate);
         saldo_inicial = saldo_financiar;
       }
       else {
+
         const newDate = this.lastday(this.fechas_de_pago[nc-2].getFullYear(), this.fechas_de_pago[nc-2].getMonth()+1);
         this.fechas_de_pago.push(newDate)
+
         saldo_inicial = saldo_final;
       }
       interes = -saldo_inicial * tep;
@@ -238,10 +266,19 @@ export class Calculate {
       amort_aux = cuota_aux - interes - segDes;
       this.amortizacion.push(parseFloat(amort_aux.toFixed(2)));
       segRisk = -segRies;
+
+
       saldo_final = saldo_inicial+amort_aux;
-      flujo = cuota_aux + segRisk + segDes;
+      flujo = cuota_aux + segRisk;
+      flujos.push(flujo);
     }
-    console.log("fechas", this.fechas_de_pago)
+
+    let tirr = irr(flujos);
+    console.log(tirr, "hola")
+    this.tcea = Math.pow(1+tirr, numero_cuotas_anio)-1;
+    console.log(flujos, "flujos")
+
+    this.tcea = parseFloat(this.tcea.toFixed(2))
   }
 
   german_method(precio_venta_activo: number, cuota_inicial: number,
@@ -290,8 +327,15 @@ export class Calculate {
       cuota_aux = interes + amort_aux + segDes;
       this.cuotas.push(parseFloat(cuota_aux.toFixed(2)));
       saldo_final = saldo_inicial + amort_aux;
-      flujo = cuota_aux + segRisk + segDes;
+      flujo = cuota_aux + segRisk;
+      flujos.push(flujo);
     }
+
+    let tirr = this.IRRCalc(flujos);
+    this.tcea = Math.pow(1+tirr, numero_cuotas_anio)-1;
+
+    this.tcea = parseFloat(this.tcea.toFixed(2))
+    tirr = 0;
   }
 
   american_method(precio_venta_activo: number, cuota_inicial: number,
@@ -342,8 +386,14 @@ export class Calculate {
       cuota_aux = interes + amort_aux + segDes;
       this.cuotas.push(parseFloat(cuota_aux.toFixed(2)));
       saldo_final = saldo_inicial + amort_aux;
-      flujo = cuota_aux + segRisk + segDes;
+      flujo = cuota_aux + segRisk;
+      flujos.push(flujo)
     }
+
+    let tirr = this.IRRCalc(flujos);
+    this.tcea = Math.pow(1+tirr, numero_cuotas_anio)-1;
+
+    this.tcea = parseFloat(this.tcea.toFixed(2))
   }
 
   peruvian_method(precio_venta_activo: number, cuota_inicial: number,
@@ -372,11 +422,13 @@ export class Calculate {
     let segDes = 0;
     let segRisk = 0;
     let flujo = saldo_financiar;
+
     let tep = Math.pow(1+tea, this.frecuencia_de_pago/n_dias_anio) - 1;
     let anualidad = 0;
     let factor_sum = 0;
 
     console.log(flujo)
+
     for (let nc = 1; nc <= total_cuotas; nc++) {
       flujos.push(flujo);
 
@@ -393,6 +445,7 @@ export class Calculate {
       if((this.fechas_de_pago[nc-1].getMonth()+1 == 7 || this.fechas_de_pago[nc-1].getMonth()+1 == 12) && this.fechas_de_pago[nc-1].getDate() >= 15 ) {
         factor_aux = n_cuotas_mul/Math.pow(1+tep,nc);
       }
+
       else{
         factor_aux = 1/Math.pow(1+tep,nc);
       }
@@ -416,7 +469,12 @@ export class Calculate {
       segRisk = -segRies;
       saldo_final = saldo_inicial + amort_aux;
       flujo = cuota_aux + segRisk + segDes;
+      flujos.push(flujo)
     }
+    let tirr = this.IRRCalc(flujos);
+    this.tcea = Math.pow(1+tirr, numero_cuotas_anio)-1;
+
+    this.tcea = parseFloat(this.tcea.toFixed(2));
   }
   peruvian_method_two(precio_venta_activo: number, cuota_inicial: number,
                 n_anios: number, tea: number,   n_dias_anio: number, initial_date: Date): void {
@@ -463,6 +521,7 @@ export class Calculate {
       }
       if((this.fechas_de_pago[nc-1].getMonth()+1 == 7 || this.fechas_de_pago[nc-1].getMonth()+1 == 12) && this.fechas_de_pago[nc-1].getDate() >= 15 ) {
         factor_aux = n_cuotas_mul/Math.pow(1+tea, (Math.abs(this.fechas_de_pago[nc-1].getTime() - initial_date.getTime())/(1000 * 60 * 60 * 24))/n_dias_anio);
+
       }
       else{
 
@@ -497,7 +556,12 @@ export class Calculate {
       segRisk = -segRies;
       saldo_final = saldo_inicial + amort_aux;
       flujo = cuota_aux + segRisk + segDes;
+      flujos.push(flujo);
     }
+
+    let tirr = this.IRRCalc(flujos);
+    this.tcea = Math.pow(1+tirr, numero_cuotas_anio)-1;
+    this.tcea = parseFloat(this.tcea.toFixed(2))
   }
 
 }
