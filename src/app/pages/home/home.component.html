@@ -8,7 +8,7 @@
             <mat-form-field appearance="fill">
               <mat-label>Valor del Activo a cotizar</mat-label>
               <span matPrefix>{{sol ? "S/" : "$"}}&nbsp;</span>
-              <input matInput formControlName="property_value" placeholder="2,500" required >
+              <input matInput formControlName="property_value" placeholder="200,000" required >
               <mat-error *ngIf="calculateForm.controls.property_value.touched && calculateForm.controls.property_value.invalid">
                 <span *ngIf="calculateForm.controls.property_value.errors?.required">Ingrese el valor de la propiedad</span>
                 <span *ngIf="calculateForm.controls.property_value.errors?.pattern">Solo se permiten valores numéricos</span>
@@ -21,8 +21,7 @@
                 <mat-option value="americano">Americano</mat-option>
                 <mat-option value="aleman">Alemán</mat-option>
                 <mat-option value="frances">Francés</mat-option>
-              </mat-select>
-            </mat-form-field>
+              </mat-select> </mat-form-field>
             <mat-label>Plazo {{this.calculateForm.value.term ? this.calculateForm.value.term + " años" : ""}}</mat-label>
             <mat-slider
               formControlName="term"
@@ -44,7 +43,7 @@
             <mat-form-field appearance="fill">
               <mat-label>Ingresos</mat-label>
               <span matPrefix>{{sol ? "S/" : "$"}}&nbsp;</span>
-              <input matInput formControlName="income" placeholder="S/ 1,000" required>
+              <input matInput formControlName="income" placeholder="1,500" required>
               <mat-error *ngIf="calculateForm.controls.income.touched && calculateForm.controls.income.invalid">
                 <span *ngIf="calculateForm.controls.income.errors?.required">Ingrese el valor de sus ingresos mensuales</span>
                 <span *ngIf="calculateForm.controls.income.errors?.pattern">Solo se permiten valores numéricos</span>

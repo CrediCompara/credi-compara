@@ -160,15 +160,19 @@
     grid-template-rows: repeat(2, 1fr);
   }
 
+  .desing{
+     margin: 10px 0;
+  }
+
 }
+
 @media all and (max-width: 1085px){
   .home-content {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     align-items: center;
-    background-image: url("../../../assets/images/background.jpg");
     background-size: 100% 100%;
-
+    background-color: whitesmoke;
   }
 
   .card-parent {
@@ -181,7 +185,6 @@
 
   .card-child {
     display: grid;
-    border: 1px black solid;
   }
 
   .card-content {
@@ -200,7 +203,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-
   }
 
   .mat-form-field {
@@ -218,17 +220,14 @@
   }
 
   .card1 {
-
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     justify-content: center;
-
   }
 
 
   .Right {
     background-color: transparent;
-
   }
 
   .desing {
@@ -258,7 +257,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
-
   }
 
   .circle {
@@ -321,6 +319,9 @@
     grid-template-rows: repeat(2, 1fr);
   }
 
+  .desing{
+     margin: 10px 0;
+  }
 
 }
 
@@ -329,6 +330,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-color: whitesmoke;
     justify-content: center;
   }
   .card-parent {
@@ -377,6 +379,9 @@
     flex-direction: column;
     align-items: center;
   }
+  .desing{
+     margin: 5px 0;
+  }
 }
 
 @media all and (max-width: 475px){
@@ -397,10 +402,15 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: 10px 15px;
+  }
+
+  .desing{
+     margin: 5px 0;
   }
 
 }
-@media all and (max-width: 380px){
+@media all and (max-width: 400px){
   .home-content {
     display: flex;
     flex-direction: column;
@@ -424,5 +434,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: 10px 15px;
+  }
+  .desing{
+     margin: 5px 0;
   }
 }
