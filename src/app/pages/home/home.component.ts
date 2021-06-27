@@ -31,6 +31,7 @@ export class HomeComponent implements OnInit {
   isFill: Boolean = false;
   onlyNumberPattern: string = "^[0-9]*$";
   listNumber: number[]=[]
+  isLoading: Boolean = false;
 
   constructor(private formBuilder: FormBuilder, private ratesApi: RatesApiService,
               private userApi: UserApiService, private tokenStorage: TokenStorageService,
@@ -60,6 +61,7 @@ export class HomeComponent implements OnInit {
     this.assetstList = [];
     this.listNumber =[];
 
+
     this.classList = [];
     this.getRates();
     this.isFill = true;
@@ -88,28 +90,42 @@ export class HomeComponent implements OnInit {
       case "frances": {
         // Min Rate
         this.calculate.french_method(property_value, initial_fee/100, term, rate.min_rate/100, n_dias_anio, initial_date);
-        this.nextCalculate(income, initial_fee, property_value, term, currency);
+        this.nextCalculate(income, initial_fee, property_value, term, currency, rate.min_rate);
         // Max Rate
         this.calculate.french_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
-        this.nextCalculate(income, initial_fee, property_value, term, currency);
+        this.nextCalculate(income, initial_fee, property_value, term, currency, rate.max_rate);
         break;
       }
       case "aleman": {
         // Min Rate
-        this.calculate.german_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
-        this.nextCalculate(income, initial_fee, property_value, term, currency);
+
+        this.calculate.german_method(property_value, initial_fee/100, term, rate.min_rate/100, n_dias_anio, initial_date);
+
+        this.nextCalculate(income, initial_fee, property_value, term, currency, rate.min_rate);
         // Max Rate
         this.calculate.german_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
-        this.nextCalculate(income, initial_fee, property_value, term, currency);
+        this.nextCalculate(income, initial_fee, property_value, term, currency, rate.max_rate);
         break;
       }
       case "americano": {
         // Min Rate
-        this.calculate.american_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
-        this.nextCalculate(income, initial_fee, property_value, term, currency);
+
+        this.calculate.american_method(property_value, initial_fee/100, term, rate.min_rate/100, n_dias_anio, initial_date);
+        this.nextCalculate(income, initial_fee, property_value, term, currency, rate.min_rate);
         // Max Rate
         this.calculate.american_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
-        this.nextCalculate(income, initial_fee, property_value, term, currency);
+        this.nextCalculate(income, initial_fee, property_value, term, currency, rate.max_rate);
+
+
+        break;
+      }
+      case "peruano": {
+        // Min Rate
+        this.calculate.peruvian_method_two(property_value, initial_fee/100, term, rate.min_rate/100, n_dias_anio, initial_date);
+        this.nextCalculate(income, initial_fee, property_value, term, currency, rate.min_rate);
+        // Max Rate
+        this.calculate.peruvian_method_two(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
+        this.nextCalculate(income, initial_fee, property_value, term, currency, rate.max_rate);
         break;
       }
       default: {
@@ -119,7 +135,7 @@ export class HomeComponent implements OnInit {
   }
 
   nextCalculate(income: number, initial_fee:number,
-              property_value:number, term:number, currency:string): void{
+              property_value:number, term:number, currency:string, rate:number): void{
     const mortgage = {} as MortgageCredit;
     mortgage.term = term;
     mortgage.initial_fee =initial_fee;
@@ -127,7 +143,8 @@ export class HomeComponent implements OnInit {
     mortgage.property_value = property_value;
     mortgage.monthly_fee = -(this.calculate.cuotas[this.calculate.cuotas.length-1]);
     mortgage.incomes = income;
-    mortgage.tcea = 11.0;
+    mortgage.tcea = this.calculate.tcea;
+    mortgage.tea = rate;
     this.dataSourceList.push(mortgage);
   }
 
@@ -140,10 +157,11 @@ export class HomeComponent implements OnInit {
     const term = this.calculateForm.value.term;
     const n_dias_anio = this.typer_years[parseInt(this.calculateForm.value.type_year)];
     const initial_date: Date = this.calculateForm.value.initial_date;
+    this.isLoading = true;
     this.ratesApi.getRateByValueAndFeeValue(term, property_value, currency).subscribe((res: Rates[]) => {
       res.forEach(rate => {
+        this.isLoading = false;
         this.onCalculate(income, initial_fee, method, property_value, term, rate, currency, n_dias_anio, initial_date);
-        console.log(rate);
       })
     },
     error =>{
@@ -161,7 +179,6 @@ export class HomeComponent implements OnInit {
             button_heart.innerText = "check_circle";
           })
       }else{
-        console.log(button_heart.textContent);
         this.userApi.deleteMortgageCreditByUserId(this.dataSourceList[index].id).subscribe((res: any) => {
           button_heart.innerText = "favorite";
         })
