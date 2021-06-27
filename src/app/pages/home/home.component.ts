@@ -42,8 +42,8 @@ export class HomeComponent implements OnInit {
     this.maxDate = new Date(this.minDate.getFullYear(), 12, 0);
     this.calculate = new Calculate();
     this.calculateForm = this.formBuilder.group({
-      property_value: [null, [Validators.required, Validators.min(1000), Validators.pattern(this.onlyNumberPattern)]],
-      income: [null, [Validators.required, Validators.pattern(this.onlyNumberPattern)]],
+      property_value: [null, [Validators.required, Validators.min(30000), Validators.pattern(this.onlyNumberPattern)]],
+      income: [null, [Validators.required, Validators.pattern(this.onlyNumberPattern), Validators.min(1500)]],
       term: [null, Validators.required],
       initial_fee: [null, Validators.required],
       currency: [null, Validators.required],
@@ -165,6 +165,7 @@ export class HomeComponent implements OnInit {
       })
     },
     error =>{
+      this.isLoading = false;
       this.error();
       this.calculateForm.reset();
     });
