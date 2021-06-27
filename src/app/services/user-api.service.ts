@@ -10,7 +10,7 @@ import {User} from '../models/user';
 })
 export class UserApiService {
 
-  basePath="http://credicompara.azurewebsites.net/api"
+  basePath="https://credicompara.azurewebsites.net/api"
   httpOptions={ headers: new HttpHeaders({'Content-Type': 'application/json'}) }
 
   constructor(private http: HttpClient) { }
