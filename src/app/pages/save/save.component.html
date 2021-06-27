@@ -1,43 +1,96 @@
-<mat-card>
-  <div class="bank1">
+<mat-card class="content">
+  <p class="titleFavorite" align="center">Lista de favoritos</p>
+  <div class="banks" *ngIf="dataSourceList.length > 0; else zeroItems">
     <div class="desing" *ngFor="let d of dataSourceList; index as i" align="center">
-      <img class="photo" [src]="this.assetstList[i]" >
-      <mat-card [ngClass]="this.classList[i]">
-        <div class="card1">
-          <div class="group1">
-            <div class="title">Cuota Mensual</div>
-            <div> {{d.monthly_fee}} </div>
+      <div *ngIf="dataSourceList[i].bank_id==1; else interbank">
+        <div class="groups">
+          <img class="photo" src="https://media.discordapp.net/attachments/651899998358994989/858497445033410580/scotia.png" >
+          <mat-card class="scotiabank">
+            <div class="card1">
+            <div class="group1">
+              <div class="title">Cuota Mensual</div>
+              <div> {{d.monthly_fee}} </div>
+            </div>
+            <div class="group2">
+              <div class="title">TCEA</div>
+              <div> {{d.tcea}} </div>
+            </div>
+            <div class="group3">
+              <div class="title">Valor de propiedad</div>
+              <div> {{d.property_value}} </div>
+            </div>
+            <div class="group4">
+              <div class="title">Moneda</div>
+              <div > {{d.currency}} </div>
+            </div>
+            <div class="group5">
+              <div class="title">Plazo</div>
+              <div> {{d.term}} </div>
+            </div>
+            <div class="group6">
+              <div class="title">Cuota inicial</div>
+              <div> {{d.initial_fee}}% </div>
+            </div>
+            <div class="group6">
+              <div class="title">TEA</div>
+              <div> {{d.tea}}% </div>
+            </div>
           </div>
-          <div class="group2">
-            <div class="title">TCEA</div>
-            <div> {{d.tcea}} </div>
+            <div class="card2">
+            <button mat-icon-button matTooltip="Ver calendario de cuotas" (click)="deleteMortageFromFavorite(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
           </div>
-          <div class="group3">
-            <div class="title">Valor de propiedad</div>
-            <div> {{d.property_value}} </div>
-          </div>
-          <div class="group4">
-            <div class="title">Moneda</div>
-            <div > {{d.currency}} </div>
-          </div>
-          <div class="group5">
-            <div class="title">Plazo</div>
-            <div> {{d.term}} </div>
-          </div>
-          <div class="group6">
-            <div class="title">Cuota inicial</div>
-            <div> {{d.initial_fee}}% </div>
-          </div>
+          </mat-card>
         </div>
-        <div class="card2">
-          <button mat-icon-button matTooltip="Guardar resultado" (click)="handleSaveButton(i)">
-            <mat-icon [attr.id]="i">favorite</mat-icon>
-          </button>
-          <button mat-icon-button routerLink="/schedule"  matTooltip="Ver calendario de cuotas">
-            <mat-icon>payments</mat-icon>
-          </button>
+      </div>
+      <ng-template #interbank>
+        <div class="groups">
+          <img class="photo" src="https://media.discordapp.net/attachments/651899998358994989/858497443111895040/interb.jpg" >
+          <mat-card class="interbank">
+            <div class="card1">
+            <div class="group1">
+              <div class="title">Cuota Mensual</div>
+              <div> {{d.monthly_fee}} </div>
+            </div>
+            <div class="group2">
+              <div class="title">TCEA</div>
+              <div> {{d.tcea}} </div>
+            </div>
+            <div class="group3">
+              <div class="title">Valor de propiedad</div>
+              <div> {{d.property_value}} </div>
+            </div>
+            <div class="group4">
+              <div class="title">Moneda</div>
+              <div > {{d.currency}} </div>
+            </div>
+            <div class="group5">
+              <div class="title">Plazo</div>
+              <div> {{d.term}} </div>
+            </div>
+            <div class="group6">
+              <div class="title">Cuota inicial</div>
+              <div> {{d.initial_fee}}% </div>
+            </div>
+            <div class="group6">
+              <div class="title">TEA</div>
+              <div> {{d.tea}}% </div>
+            </div>
+          </div>
+            <div class="card2">
+            <button mat-icon-button matTooltip="Ver calendario de cuotas" (click)="deleteMortageFromFavorite(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+          </mat-card>
         </div>
-      </mat-card>
+      </ng-template>
     </div>
   </div >
+  <ng-template #zeroItems>
+    <div class="zeroVehicles">
+      <label class="lblZeroVehicles">No tienes vehículos añadidos</label>
+    </div>
+  </ng-template>
 </mat-card>

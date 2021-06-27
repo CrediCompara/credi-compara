@@ -24,5 +24,10 @@ export class SaveComponent implements OnInit {
       this.dataSourceList = data;
     });
   }
+  deleteMortageFromFavorite(index: number) {
+    this.userApi.deleteMortgageCreditByUserId(this.dataSourceList[index].id).subscribe(res => {
+      window.location.reload();
+    });
+  }
 
 }

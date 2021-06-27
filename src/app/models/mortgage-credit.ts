@@ -8,4 +8,5 @@ export interface MortgageCredit {
   incomes: number;
   tcea: number;
   bank_id:number;
+  tea: number;
 }

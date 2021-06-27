@@ -24,7 +24,17 @@
               </mat-select>
             </mat-form-field>
             <mat-label>Plazo {{this.calculateForm.value.term ? this.calculateForm.value.term + " años" : ""}}</mat-label>
+<<<<<<< HEAD
             <mat-slider formControlName="term" thumbLabel step="1" min="5" max="50" aria-label="units"></mat-slider>
+=======
+            <mat-slider
+              formControlName="term"
+              thumbLabel
+              step="1"
+              min="5"
+              max="30"
+              aria-label="units"></mat-slider>
+>>>>>>> 250e902348a3b9a9f25fa5ca7d0ba3b7271b9864
             <mat-form-field appearance="fill">
               <mat-label>Moneda</mat-label>
               <mat-select formControlName="currency" required (selectionChange)="handleSelectionChange($event)">
@@ -64,8 +74,9 @@
       </mat-card-content>
     </mat-card>
   </mat-card>
-  <div class="Right" *ngIf="isFill">
-    <div class="bank1">
+  <div class="Right">
+    <mat-spinner *ngIf="isLoading" color="Warn" diameter="200"></mat-spinner>
+    <div class="bank1" *ngIf="isFill">
       <div class="desing" *ngFor="let d of dataSourceList; index as i" align="center">
         <img class="photo" [src]="this.assetstList[i]">
         <mat-card [ngClass]="this.classList[i]">
@@ -76,7 +87,7 @@
             </div>
             <div class="group2">
               <div class="title">TCEA</div>
-              <div> {{d.tcea}} </div>
+              <div> {{d.tcea}}%</div>
             </div>
             <div class="group3">
               <div class="title">Valor de propiedad</div>
@@ -93,6 +104,10 @@
             <div class="group6">
               <div class="title">Cuota inicial</div>
               <div> {{d.initial_fee}}% </div>
+            </div>
+            <div class="group6">
+              <div class="title">TEA</div>
+              <div> {{d.tea}}% </div>
             </div>
           </div>
           <div class="card2">

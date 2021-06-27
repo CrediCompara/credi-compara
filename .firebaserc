@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "credicompara-d5d8c": {
+      "hosting": {
+        "credi-compara": [
+          "credicompara-d5d8c"
+        ]
+      }
+    }
+  }
+}
