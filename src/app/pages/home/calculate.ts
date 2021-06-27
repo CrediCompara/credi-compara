@@ -1,4 +1,3 @@
-import {Finance} from 'financejs'
 import {irr} from 'financial'
 
 
@@ -34,42 +33,12 @@ export class Calculate {
     }
   }
 
-
-
-  IRRCalc(CArray: number[], guest: number) {
-
-    let min = 0.0;
-    let max = 1.0;
-    let c=0;
-    let NPV =0;
-    do {
-      guest = (min + max) / 2;
-      NPV = 0;
-      for (var j=0; j<CArray.length; j++) {
-          NPV += CArray[j]/Math.pow((1+guest),j);
-      }
-      if (NPV > 0) {
-        min = guest;
-        c++;
-      }
-      else {
-        max = guest;
-        c++;
-      }
-
-      if(c>=2){ return guest*100; }
-    } while(Math.abs(NPV) > 0.000001);
-    return guest*100;
-  }
-
-
   french_method(precio_venta_activo: number, cuota_inicial: number,
                 n_anios: number, tea: number, n_dias_anio:number, initial_date: Date): void{
     // Clear arrays
     this.cuotas = [];
     this.amortizacion = [];
     this.fechas_de_pago = [];
-    let finance = new Finance();
 
     // Required calculations
     let numero_cuotas_anio = n_dias_anio/this.frecuencia_de_pago;
@@ -121,9 +90,7 @@ export class Calculate {
 
 
     let tirr = irr(flujos, 0.01);
-    console.log(tirr, "hola")
     this.tcea = (Math.pow(1+tirr, numero_cuotas_anio)-1) * 100
-    console.log(this.tcea, tirr, numero_cuotas_anio, "TCEA")
 
     this.tcea = parseFloat(this.tcea.toFixed(3))
 
@@ -181,9 +148,7 @@ export class Calculate {
     }
 
     let tirr = irr(flujos, 0.01);
-    console.log(tirr, "hola")
     this.tcea = (Math.pow(1+tirr, numero_cuotas_anio)-1) * 100
-    console.log(this.tcea, tirr, numero_cuotas_anio, "TCEA")
 
     this.tcea = parseFloat(this.tcea.toFixed(3))
   }
@@ -242,9 +207,7 @@ export class Calculate {
     }
 
     let tirr = irr(flujos, 0.01);
-    console.log(tirr, "hola")
     this.tcea = (Math.pow(1+tirr, numero_cuotas_anio)-1) * 100
-    console.log(this.tcea, tirr, numero_cuotas_anio, "TCEA")
 
     this.tcea = parseFloat(this.tcea.toFixed(3))
 
@@ -281,7 +244,6 @@ export class Calculate {
     let anualidad = 0;
     let factor_sum = 0;
 
-    console.log(flujo)
 
     for (let nc = 1; nc <= total_cuotas; nc++) {
 
@@ -327,9 +289,7 @@ export class Calculate {
       flujos.push(flujo)
     }
     let tirr = irr(flujos, 0.01);
-    console.log(tirr, "hola")
     this.tcea = (Math.pow(1+tirr, n_dias_anio/this.frecuencia_de_pago)-1) * 100
-    console.log(this.tcea, tirr, numero_cuotas_anio, "TCEA")
 
     this.tcea = parseFloat(this.tcea.toFixed(3))
 
@@ -390,7 +350,6 @@ export class Calculate {
       factor_sum += factor_aux;
     }
     anualidad  = saldo_financiar/factor_sum;
-    console.log("anualidad", anualidad, factor_sum)
     for(let nc = 1; nc <= total_cuotas; nc++){
 
       if(nc <= 1){
@@ -421,9 +380,7 @@ export class Calculate {
     }
 
     let tirr = irr(flujos, 0.01);
-    console.log(tirr, "hola")
     this.tcea = (Math.pow(1+tirr, n_dias_anio/this.frecuencia_de_pago)-1) * 100
-    console.log(this.tcea, tirr, numero_cuotas_anio, "TCEA")
 
     this.tcea = parseFloat(this.tcea.toFixed(3))
   }
