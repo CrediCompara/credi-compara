@@ -60,6 +60,7 @@ export class HomeComponent implements OnInit {
   onCalculate(income: number, initial_fee:number,method: string,
               property_value:number, term:number, rate: Rates,
               currency:string, n_dias_anio: number, initial_date: Date): void{
+    console.log(initial_date)
     if(rate.bank_id == 1){
       this.assetstList.push(this.scotia_img);
       this.assetstList.push(this.scotia_img);
@@ -86,10 +87,10 @@ export class HomeComponent implements OnInit {
         // Min Rate
         console.log(rate.min_rate)
         console.log(rate)
-        this.calculate.german_method(property_value, initial_fee/100, term, rate.min_rate/100);
+        this.calculate.german_method(property_value, initial_fee/100, term, rate.min_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency);
         // Max Rate
-        this.calculate.german_method(property_value, initial_fee/100, term, rate.max_rate/100);
+        this.calculate.german_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency);
 
 
@@ -99,10 +100,23 @@ export class HomeComponent implements OnInit {
         // Min Rate
         console.log(rate.min_rate)
         console.log(rate)
-        this.calculate.american_method(property_value, initial_fee/100, term, rate.min_rate/100);
+        this.calculate.american_method(property_value, initial_fee/100, term, rate.min_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency);
         // Max Rate
-        this.calculate.american_method(property_value, initial_fee/100, term, rate.max_rate/100);
+        this.calculate.american_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
+        this.nextCalculate(income, initial_fee, property_value, term, currency);
+
+
+        break;
+      }
+      case "peruano": {
+        // Min Rate
+        console.log(rate.min_rate)
+        console.log(rate)
+        this.calculate.peruvian_method_two(property_value, initial_fee/100, term, rate.min_rate/100, n_dias_anio, initial_date);
+        this.nextCalculate(income, initial_fee, property_value, term, currency);
+        // Max Rate
+        this.calculate.peruvian_method_two(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency);
 
 
