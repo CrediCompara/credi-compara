@@ -33,6 +33,7 @@ export class HomeComponent implements OnInit {
   onlyNumberPattern: string = "^[0-9]*$";
   listNumber: number[]=[]
   isLoading: Boolean = false;
+  current_index: number = 0;
 
   // Tabular calendario
   dates_tab: Date[][]=[];
@@ -99,57 +100,65 @@ export class HomeComponent implements OnInit {
       case "frances": {
         // Min Rate
         this.calculate.french_method(property_value, initial_fee/100, term, rate.min_rate/100, n_dias_anio, initial_date);
-<<<<<<< HEAD
-        this.nextCalculate(income, initial_fee, property_value, term, currency);
-        this.dates_tab.push(this.calculate.fechas_de_pago)
-        this.cuotas_tab.push(this.calculate.cuotas)
-        this.mortgage_tab.push(this.calculate.amortizacion)
-
-        // Max Rate
-        this.calculate.french_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
-        this.nextCalculate(income, initial_fee, property_value, term, currency);
-        this.dates_tab.push(this.calculate.fechas_de_pago)
-        this.cuotas_tab.push(this.calculate.cuotas)
-        this.mortgage_tab.push(this.calculate.amortizacion)
-
-=======
         this.nextCalculate(income, initial_fee, property_value, term, currency, rate.min_rate);
+        this.dates_tab.push(this.calculate.fechas_de_pago)
+        this.cuotas_tab.push(this.calculate.cuotas)
+        this.mortgage_tab.push(this.calculate.amortizacion)
+
         // Max Rate
         this.calculate.french_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency, rate.max_rate);
->>>>>>> 250e902348a3b9a9f25fa5ca7d0ba3b7271b9864
+        this.dates_tab.push(this.calculate.fechas_de_pago)
+        this.cuotas_tab.push(this.calculate.cuotas)
+        this.mortgage_tab.push(this.calculate.amortizacion)
         break;
       }
       case "aleman": {
         // Min Rate
-
         this.calculate.german_method(property_value, initial_fee/100, term, rate.min_rate/100, n_dias_anio, initial_date);
-
         this.nextCalculate(income, initial_fee, property_value, term, currency, rate.min_rate);
+        this.dates_tab.push(this.calculate.fechas_de_pago)
+        this.cuotas_tab.push(this.calculate.cuotas)
+        this.mortgage_tab.push(this.calculate.amortizacion)
+
         // Max Rate
         this.calculate.german_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency, rate.max_rate);
+        this.dates_tab.push(this.calculate.fechas_de_pago)
+        this.cuotas_tab.push(this.calculate.cuotas)
+        this.mortgage_tab.push(this.calculate.amortizacion)
         break;
       }
       case "americano": {
         // Min Rate
-
         this.calculate.american_method(property_value, initial_fee/100, term, rate.min_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency, rate.min_rate);
+        this.dates_tab.push(this.calculate.fechas_de_pago)
+        this.cuotas_tab.push(this.calculate.cuotas)
+        this.mortgage_tab.push(this.calculate.amortizacion)
+
         // Max Rate
         this.calculate.american_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency, rate.max_rate);
-
-
+        this.dates_tab.push(this.calculate.fechas_de_pago)
+        this.cuotas_tab.push(this.calculate.cuotas)
+        this.mortgage_tab.push(this.calculate.amortizacion)
         break;
       }
       case "peruano": {
         // Min Rate
         this.calculate.peruvian_method_two(property_value, initial_fee/100, term, rate.min_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency, rate.min_rate);
+        this.dates_tab.push(this.calculate.fechas_de_pago)
+        this.cuotas_tab.push(this.calculate.cuotas)
+        this.mortgage_tab.push(this.calculate.amortizacion)
+
         // Max Rate
         this.calculate.peruvian_method_two(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency, rate.max_rate);
+        this.dates_tab.push(this.calculate.fechas_de_pago)
+        this.cuotas_tab.push(this.calculate.cuotas)
+        this.mortgage_tab.push(this.calculate.amortizacion)
         break;
       }
       default: {
@@ -168,7 +177,7 @@ export class HomeComponent implements OnInit {
     mortgage.initial_fee =initial_fee;
     mortgage.currency = currency;
     mortgage.property_value = property_value;
-    mortgage.monthly_fee = -(this.calculate.cuotas[this.calculate.cuotas.length-1]);
+    mortgage.monthly_fee = this.calculate.prom_cuotas;
     mortgage.incomes = income;
     mortgage.tcea = this.calculate.tcea;
     mortgage.tea = rate;
@@ -189,10 +198,6 @@ export class HomeComponent implements OnInit {
       res.forEach(rate => {
         this.isLoading = false;
         this.onCalculate(income, initial_fee, method, property_value, term, rate, currency, n_dias_anio, initial_date);
-<<<<<<< HEAD
-        //console.log(rate);
-=======
->>>>>>> 250e902348a3b9a9f25fa5ca7d0ba3b7271b9864
       })
     },
     error =>{
@@ -224,7 +229,6 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  current_index: number
   handleTabulation(index: number): void{
     this.selectTabData(index)
     if (index == this.current_index && this.view_calendar == true){

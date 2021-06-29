@@ -24,9 +24,6 @@
               </mat-select>
             </mat-form-field>
             <mat-label>Plazo {{this.calculateForm.value.term ? this.calculateForm.value.term + " años" : ""}}</mat-label>
-<<<<<<< HEAD
-            <mat-slider formControlName="term" thumbLabel step="1" min="5" max="50" aria-label="units"></mat-slider>
-=======
             <mat-slider
               formControlName="term"
               thumbLabel
@@ -34,7 +31,6 @@
               min="5"
               max="30"
               aria-label="units"></mat-slider>
->>>>>>> 250e902348a3b9a9f25fa5ca7d0ba3b7271b9864
             <mat-form-field appearance="fill">
               <mat-label>Moneda</mat-label>
               <mat-select formControlName="currency" required (selectionChange)="handleSelectionChange($event)">

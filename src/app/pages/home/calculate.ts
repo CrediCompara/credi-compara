@@ -11,6 +11,7 @@ export class Calculate {
   amortizacion: number[] = [];
   tcea: number = 0.0;
   fechas_de_pago: Date[] = [];
+  prom_cuotas: number = 0;
 
 
   pmt (rate:number, nper:number, pv:number, fv:number, type:number): number {
@@ -39,6 +40,7 @@ export class Calculate {
     this.cuotas = [];
     this.amortizacion = [];
     this.fechas_de_pago = [];
+    this.prom_cuotas = 0;
 
     // Required calculations
     let numero_cuotas_anio = n_dias_anio/this.frecuencia_de_pago;
@@ -76,10 +78,11 @@ export class Calculate {
       }
       interes = -saldo_inicial * tep;
       cuota_aux = this.pmt(tep+this.tasa_desgravamen, total_cuotas - nc + 1, saldo_inicial, 0, 0);
-      this.cuotas.push(parseFloat(cuota_aux.toFixed(2)));
+      this.prom_cuotas += -(cuota_aux);
+      this.cuotas.push(-parseFloat(cuota_aux.toFixed(2)));
       segDes = -(saldo_inicial*this.tasa_desgravamen);
       amort_aux = cuota_aux - interes - segDes;
-      this.amortizacion.push(parseFloat(amort_aux.toFixed(2)));
+      this.amortizacion.push(-parseFloat(amort_aux.toFixed(2)));
       segRisk = -segRies;
 
 
@@ -93,6 +96,7 @@ export class Calculate {
     this.tcea = (Math.pow(1+tirr, numero_cuotas_anio)-1) * 100
 
     this.tcea = parseFloat(this.tcea.toFixed(3))
+    this.prom_cuotas = parseFloat((this.prom_cuotas/total_cuotas).toFixed(2));
 
   }
 
@@ -102,6 +106,7 @@ export class Calculate {
     this.cuotas = [];
     this.amortizacion = [];
     this.fechas_de_pago = [];
+    this.prom_cuotas = 0;
 
     // Required calculations
     let numero_cuotas_anio = n_dias_anio / this.frecuencia_de_pago;
@@ -138,10 +143,11 @@ export class Calculate {
       interes = -saldo_inicial * tep;
       segDes = -saldo_inicial * this.tasa_desgravamen;
       amort_aux = -saldo_inicial/(total_cuotas - nc +1)
-      this.amortizacion.push(parseFloat(amort_aux.toFixed(2)));
+      this.amortizacion.push(-parseFloat(amort_aux.toFixed(2)));
       segRisk = -segRies;
       cuota_aux = interes + amort_aux + segDes;
-      this.cuotas.push(parseFloat(cuota_aux.toFixed(2)));
+      this.cuotas.push(-parseFloat(cuota_aux.toFixed(2)));
+      this.prom_cuotas += -(cuota_aux);
       saldo_final = saldo_inicial + amort_aux;
       flujo = cuota_aux + segRisk;
       flujos.push(flujo);
@@ -151,6 +157,7 @@ export class Calculate {
     this.tcea = (Math.pow(1+tirr, numero_cuotas_anio)-1) * 100
 
     this.tcea = parseFloat(this.tcea.toFixed(3))
+    this.prom_cuotas = parseFloat((this.prom_cuotas/total_cuotas).toFixed(2));
   }
 
   american_method(precio_venta_activo: number, cuota_inicial: number,
@@ -159,6 +166,7 @@ export class Calculate {
     this.cuotas = [];
     this.amortizacion = [];
     this.fechas_de_pago = [];
+    this.prom_cuotas = 0;
 
     // Required calculations
     let numero_cuotas_anio = n_dias_anio / this.frecuencia_de_pago;
@@ -197,10 +205,11 @@ export class Calculate {
       else{
         amort_aux = 0;
       }
-      this.amortizacion.push(parseFloat(amort_aux.toFixed(2)));
+      this.amortizacion.push(-parseFloat(amort_aux.toFixed(2)));
       segRisk = -segRies;
       cuota_aux = interes + amort_aux + segDes;
-      this.cuotas.push(parseFloat(cuota_aux.toFixed(2)));
+      this.cuotas.push(-parseFloat(cuota_aux.toFixed(2)));
+      this.prom_cuotas += -(cuota_aux);
       saldo_final = saldo_inicial + amort_aux;
       flujo = cuota_aux + segRisk;
       flujos.push(flujo)
@@ -210,7 +219,7 @@ export class Calculate {
     this.tcea = (Math.pow(1+tirr, numero_cuotas_anio)-1) * 100
 
     this.tcea = parseFloat(this.tcea.toFixed(3))
-
+    this.prom_cuotas = parseFloat((this.prom_cuotas/total_cuotas).toFixed(2));
   }
 
   peruvian_method(precio_venta_activo: number, cuota_inicial: number,
@@ -219,6 +228,7 @@ export class Calculate {
     this.cuotas = [];
     this.amortizacion = [];
     this.fechas_de_pago = [];
+    this.prom_cuotas = 0;
 
     const factor: number[] = [];
 
@@ -278,10 +288,11 @@ export class Calculate {
         cuota_aux = -anualidad;
       }
       cuota_aux = parseFloat(cuota_aux.toFixed(2));
-      this.cuotas.push(cuota_aux);
+      this.cuotas.push(-cuota_aux);
+      this.prom_cuotas += -(cuota_aux);
 
       amort_aux = cuota_aux - interes;
-      this.amortizacion.push(amort_aux);
+      this.amortizacion.push(-amort_aux);
       segDes = -saldo_inicial * this.tasa_desgravamen;
       segRisk = -segRies;
       saldo_final = saldo_inicial + amort_aux;
@@ -292,8 +303,9 @@ export class Calculate {
     this.tcea = (Math.pow(1+tirr, n_dias_anio/this.frecuencia_de_pago)-1) * 100
 
     this.tcea = parseFloat(this.tcea.toFixed(3))
-
+    this.prom_cuotas = parseFloat((this.prom_cuotas/total_cuotas).toFixed(2));
   }
+
   peruvian_method_two(precio_venta_activo: number, cuota_inicial: number,
                 n_anios: number, tea: number,   n_dias_anio: number, initial_date: Date): void {
     // Clear arrays
@@ -368,10 +380,11 @@ export class Calculate {
       }
 
       cuota_aux = parseFloat(cuota_aux.toFixed(2));
-      this.cuotas.push(cuota_aux);
+      this.cuotas.push(-cuota_aux);
+      this.prom_cuotas += -(cuota_aux);
 
       amort_aux = cuota_aux - interes;
-      this.amortizacion.push(amort_aux);
+      this.amortizacion.push(-amort_aux);
       segDes = -saldo_inicial * this.tasa_desgravamen;
       segRisk = -segRies;
       saldo_final = saldo_inicial + amort_aux;
@@ -383,6 +396,7 @@ export class Calculate {
     this.tcea = (Math.pow(1+tirr, n_dias_anio/this.frecuencia_de_pago)-1) * 100
 
     this.tcea = parseFloat(this.tcea.toFixed(3))
+    this.prom_cuotas = parseFloat((this.prom_cuotas/total_cuotas).toFixed(2));
   }
 
 }
