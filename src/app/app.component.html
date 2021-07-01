@@ -1,5 +1,5 @@
 <mat-toolbar class="nav-bar">
- <a routerLink='/home' routerLinkActive="active" class="title-name"><span>CrediCompara</span></a>
+ <a routerLink='/home' routerLinkActive="active" class="title-name"><span class="text">CrediCompara</span></a>
  <span class="example-spacer"></span>
  <div *ngIf="isLoggedIn">
   <button mat-icon-button routerLink="/save" class="example-icon favorite-icon" aria-label="Example icon-button with heart icon" >
@@ -15,16 +15,28 @@
   </button>
  </div>
  <div *ngIf="!isLoggedIn">
-  <button mat-button class="example-icon favorite-icon"
+  <button *ngIf="!this.lessThan500" mat-button class="example-icon favorite-icon"
     arial-label="Example icon-button with share icon"
     routerLink="/login">
     Sign in
   </button>
-  <button mat-button class="example-icon favorite-icon"
+  <button *ngIf="!this.lessThan500" mat-button class="example-icon favorite-icon"
     arial-label="Example icon-button with share icon"
     routerLink="/signup">
     Sign up
   </button>
+  <button *ngIf="!this.lessThan500" mat-button class="example-icon favorite-icon"
+    arial-label="Example icon-button with share icon"
+    (click)="openDialog()">
+    Ayuda
+  </button>
+  <button *ngIf="this.lessThan500" mat-button [matMenuTriggerFor]="beforeMenu">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <mat-menu #beforeMenu="matMenu" xPosition="before">
+    <button mat-menu-item routerLink="/login">Sign in</button>
+    <button mat-menu-item routerLink="/signup">Sign up</button>
+  </mat-menu>
  </div>
 </mat-toolbar>
 <router-outlet></router-outlet>
