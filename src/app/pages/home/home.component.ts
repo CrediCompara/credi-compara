@@ -32,6 +32,15 @@ export class HomeComponent implements OnInit {
   onlyNumberPattern: string = "^[0-9]*$";
   listNumber: number[]=[]
   isLoading: Boolean = false;
+  current_index: number = 0;
+
+  // Tabular calendario
+  dates_tab: Date[][]=[];
+  cuotas_tab: number[][]=[];
+  mortgage_tab: number[][]=[]
+  selected_tab_data: any[] = []
+
+  view_calendar: Boolean = false;
 
   constructor(private formBuilder: FormBuilder, private ratesApi: RatesApiService,
               private userApi: UserApiService, private tokenStorage: TokenStorageService,
@@ -60,9 +69,10 @@ export class HomeComponent implements OnInit {
     this.dataSourceList = [];
     this.assetstList = [];
     this.listNumber =[];
-
-
     this.classList = [];
+    this.dates_tab = [];
+    this.cuotas_tab = [];
+    this.mortgage_tab = [];
     this.getRates();
     this.isFill = true;
   }
@@ -91,41 +101,74 @@ export class HomeComponent implements OnInit {
         // Min Rate
         this.calculate.french_method(property_value, initial_fee/100, term, rate.min_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency, rate.min_rate);
+        this.dates_tab.push(this.calculate.fechas_de_pago)
+        this.cuotas_tab.push(this.calculate.cuotas)
+        this.mortgage_tab.push(this.calculate.amortizacion)
+
         // Max Rate
         this.calculate.french_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency, rate.max_rate);
+        this.dates_tab.push(this.calculate.fechas_de_pago)
+        this.cuotas_tab.push(this.calculate.cuotas)
+        this.mortgage_tab.push(this.calculate.amortizacion)
         break;
       }
       case "aleman": {
         // Min Rate
-
         this.calculate.german_method(property_value, initial_fee/100, term, rate.min_rate/100, n_dias_anio, initial_date);
-
         this.nextCalculate(income, initial_fee, property_value, term, currency, rate.min_rate);
+        this.dates_tab.push(this.calculate.fechas_de_pago)
+        this.cuotas_tab.push(this.calculate.cuotas)
+        this.mortgage_tab.push(this.calculate.amortizacion)
+
         // Max Rate
         this.calculate.german_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency, rate.max_rate);
+        this.dates_tab.push(this.calculate.fechas_de_pago)
+        this.cuotas_tab.push(this.calculate.cuotas)
+        this.mortgage_tab.push(this.calculate.amortizacion)
         break;
       }
       case "americano": {
         // Min Rate
-
         this.calculate.american_method(property_value, initial_fee/100, term, rate.min_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency, rate.min_rate);
+        this.dates_tab.push(this.calculate.fechas_de_pago)
+        this.cuotas_tab.push(this.calculate.cuotas)
+        this.mortgage_tab.push(this.calculate.amortizacion)
+
         // Max Rate
         this.calculate.american_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
         this.nextCalculate(income, initial_fee, property_value, term, currency, rate.max_rate);
-
-
+        this.dates_tab.push(this.calculate.fechas_de_pago)
+        this.cuotas_tab.push(this.calculate.cuotas)
+        this.mortgage_tab.push(this.calculate.amortizacion)
         break;
       }
       case "peruano": {
         // Min Rate
-        this.calculate.peruvian_method_two(property_value, initial_fee/100, term, rate.min_rate/100, n_dias_anio, initial_date);
+        if(n_dias_anio == 360){
+          this.calculate.peruvian_method(property_value, initial_fee/100, term, rate.min_rate/100, n_dias_anio, initial_date);
+        }
+        else{
+          this.calculate.peruvian_method_two(property_value, initial_fee/100, term, rate.min_rate/100, n_dias_anio, initial_date);
+        }
+
         this.nextCalculate(income, initial_fee, property_value, term, currency, rate.min_rate);
+        this.dates_tab.push(this.calculate.fechas_de_pago)
+        this.cuotas_tab.push(this.calculate.cuotas)
+        this.mortgage_tab.push(this.calculate.amortizacion)
+
         // Max Rate
-        this.calculate.peruvian_method_two(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
+        if(n_dias_anio == 360)
+          this.calculate.peruvian_method(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
+        else
+          this.calculate.peruvian_method_two(property_value, initial_fee/100, term, rate.max_rate/100, n_dias_anio, initial_date);
+
         this.nextCalculate(income, initial_fee, property_value, term, currency, rate.max_rate);
+        this.dates_tab.push(this.calculate.fechas_de_pago)
+        this.cuotas_tab.push(this.calculate.cuotas)
+        this.mortgage_tab.push(this.calculate.amortizacion)
         break;
       }
       default: {
@@ -141,7 +184,7 @@ export class HomeComponent implements OnInit {
     mortgage.initial_fee =initial_fee;
     mortgage.currency = currency;
     mortgage.property_value = property_value;
-    mortgage.monthly_fee = -(this.calculate.cuotas[this.calculate.cuotas.length-1]);
+    mortgage.monthly_fee = this.calculate.prom_cuotas;
     mortgage.incomes = income;
     mortgage.tcea = this.calculate.tcea;
     mortgage.tea = rate;
@@ -185,6 +228,30 @@ export class HomeComponent implements OnInit {
         })
       }
     }
+  }
+
+  selectTabData(index: number): void{
+    this.selected_tab_data = []
+    for (let i = 0; i < this.cuotas_tab[index].length; i++) {
+      this.selected_tab_data.push({fecha: this.dates_tab[index][i].toISOString().slice(0, 10), cuota: this.cuotas_tab[index][i], amortizacion: this.mortgage_tab[index][i]})
+    }
+  }
+
+  handleTabulation(index: number): void{
+    this.selectTabData(index)
+    if (index == this.current_index && this.view_calendar == true){
+      this.view_calendar = false
+    }
+    else if (index == this.current_index && this.view_calendar == false){
+      this.view_calendar = true
+    }
+    else if (index != this.current_index && this.view_calendar == false){
+      this.view_calendar = true
+    }
+    else if (index != this.current_index && this.view_calendar == true){
+      this.view_calendar = false
+    }
+    this.current_index = index
   }
 
   error(): void {

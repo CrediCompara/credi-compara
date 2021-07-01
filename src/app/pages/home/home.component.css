@@ -61,11 +61,9 @@
   }
 
   .card1 {
-
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     justify-content: center;
-
   }
 
 
@@ -164,6 +162,11 @@
      margin: 10px 0;
   }
 
+  .tabla {
+    text-align: center;
+    padding: 25px 10px;
+    width: 95%;
+  }
 }
 
 @media all and (max-width: 1085px){
@@ -190,7 +193,6 @@
   .card-content {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-
   }
 
   .columns1 {
@@ -322,7 +324,11 @@
   .desing{
      margin: 10px 0;
   }
-
+  .tabla {
+    text-align: center;
+    margin: 25px 10px;
+    width: 92%;
+  }
 }
 
 @media all and (max-width: 600px){
@@ -382,6 +388,11 @@
   .desing{
      margin: 5px 0;
   }
+  .tabla {
+    text-align: center;
+    margin: 25px 10px;
+    width: 92%;
+  }
 }
 
 @media all and (max-width: 475px){
@@ -408,6 +419,11 @@
   .desing{
      margin: 5px 0;
   }
+.tabla {
+  text-align: center;
+  margin: 25px 10px;
+  width: 92%;
+}
 
 }
 @media all and (max-width: 400px){
@@ -439,4 +455,10 @@
   .desing{
      margin: 5px 0;
   }
+}
+
+.tabla {
+  text-align: center;
+  margin: 25px 10px;
+  width: 92%;
 }

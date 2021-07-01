@@ -11,6 +11,7 @@ export class Calculate {
   amortizacion: number[] = [];
   tcea: number = 0.0;
   fechas_de_pago: Date[] = [];
+  prom_cuotas: number = 0;
 
 
   pmt (rate:number, nper:number, pv:number, fv:number, type:number): number {
@@ -24,13 +25,8 @@ export class Calculate {
     }
     return pmt
   }
-  lastday(y: number,m: number){
-    if (m == 12){
-      return new Date(y+1, m+1,0);
-    }
-    else{
-      return new Date(y, m + 1, 0);
-    }
+  lastday(y: number,m: number, d: number = 0): Date{
+    return new Date(y, m, d);
   }
 
   french_method(precio_venta_activo: number, cuota_inicial: number,
@@ -39,6 +35,7 @@ export class Calculate {
     this.cuotas = [];
     this.amortizacion = [];
     this.fechas_de_pago = [];
+    this.prom_cuotas = 0;
 
     // Required calculations
     let numero_cuotas_anio = n_dias_anio/this.frecuencia_de_pago;
@@ -57,29 +54,29 @@ export class Calculate {
     let segDes = 0;
     let segRisk = 0;
     let flujo = saldo_financiar;
+    let newDate: Date;
 
     for(let nc = 1; nc <= total_cuotas; nc++) {
 
       tep = Math.pow(1+tea, this.frecuencia_de_pago/n_dias_anio) - 1;
       if(nc == 1){
         flujos.push(flujo);
-        const newDate = this.lastday(initial_date.getFullYear(), initial_date.getMonth()+1);
+        const newDate = this.lastday(initial_date.getFullYear(), initial_date.getMonth()+1, initial_date.getDate());
         this.fechas_de_pago.push(newDate);
         saldo_inicial = saldo_financiar;
       }
       else {
-
-        const newDate = this.lastday(this.fechas_de_pago[nc-2].getFullYear(), this.fechas_de_pago[nc-2].getMonth()+1);
+        newDate = this.lastday(this.fechas_de_pago[nc-2].getFullYear(), this.fechas_de_pago[nc-2].getMonth()+1, initial_date.getDate());
         this.fechas_de_pago.push(newDate)
-
         saldo_inicial = saldo_final;
       }
       interes = -saldo_inicial * tep;
       cuota_aux = this.pmt(tep+this.tasa_desgravamen, total_cuotas - nc + 1, saldo_inicial, 0, 0);
-      this.cuotas.push(parseFloat(cuota_aux.toFixed(2)));
+      this.prom_cuotas += -(cuota_aux);
+      this.cuotas.push(-parseFloat(cuota_aux.toFixed(2)));
       segDes = -(saldo_inicial*this.tasa_desgravamen);
       amort_aux = cuota_aux - interes - segDes;
-      this.amortizacion.push(parseFloat(amort_aux.toFixed(2)));
+      this.amortizacion.push(-parseFloat(amort_aux.toFixed(2)));
       segRisk = -segRies;
 
 
@@ -93,6 +90,7 @@ export class Calculate {
     this.tcea = (Math.pow(1+tirr, numero_cuotas_anio)-1) * 100
 
     this.tcea = parseFloat(this.tcea.toFixed(3))
+    this.prom_cuotas = parseFloat((this.prom_cuotas/total_cuotas).toFixed(2));
 
   }
 
@@ -102,6 +100,7 @@ export class Calculate {
     this.cuotas = [];
     this.amortizacion = [];
     this.fechas_de_pago = [];
+    this.prom_cuotas = 0;
 
     // Required calculations
     let numero_cuotas_anio = n_dias_anio / this.frecuencia_de_pago;
@@ -127,21 +126,22 @@ export class Calculate {
       tep = Math.pow(1 + tea, this.frecuencia_de_pago / n_dias_anio) - 1;
       if (nc == 1) {
         saldo_inicial = saldo_financiar;
-        const newDate = this.lastday(initial_date.getFullYear(), initial_date.getMonth()+1);
+        const newDate = this.lastday(initial_date.getFullYear(), initial_date.getMonth()+1, initial_date.getDate());
         this.fechas_de_pago.push(newDate);
       } else {
         saldo_inicial = saldo_final;
-        const newDate = this.lastday(this.fechas_de_pago[nc-2].getFullYear(), this.fechas_de_pago[nc-2].getMonth()+1);
+        const newDate = this.lastday(this.fechas_de_pago[nc-2].getFullYear(), this.fechas_de_pago[nc-2].getMonth()+1, initial_date.getDate());
         this.fechas_de_pago.push(newDate)
       }
 
       interes = -saldo_inicial * tep;
       segDes = -saldo_inicial * this.tasa_desgravamen;
       amort_aux = -saldo_inicial/(total_cuotas - nc +1)
-      this.amortizacion.push(parseFloat(amort_aux.toFixed(2)));
+      this.amortizacion.push(-parseFloat(amort_aux.toFixed(2)));
       segRisk = -segRies;
       cuota_aux = interes + amort_aux + segDes;
-      this.cuotas.push(parseFloat(cuota_aux.toFixed(2)));
+      this.cuotas.push(-parseFloat(cuota_aux.toFixed(2)));
+      this.prom_cuotas += -(cuota_aux);
       saldo_final = saldo_inicial + amort_aux;
       flujo = cuota_aux + segRisk;
       flujos.push(flujo);
@@ -151,6 +151,7 @@ export class Calculate {
     this.tcea = (Math.pow(1+tirr, numero_cuotas_anio)-1) * 100
 
     this.tcea = parseFloat(this.tcea.toFixed(3))
+    this.prom_cuotas = parseFloat((this.prom_cuotas/total_cuotas).toFixed(2));
   }
 
   american_method(precio_venta_activo: number, cuota_inicial: number,
@@ -159,6 +160,7 @@ export class Calculate {
     this.cuotas = [];
     this.amortizacion = [];
     this.fechas_de_pago = [];
+    this.prom_cuotas = 0;
 
     // Required calculations
     let numero_cuotas_anio = n_dias_anio / this.frecuencia_de_pago;
@@ -182,11 +184,11 @@ export class Calculate {
       tep = Math.pow(1 + tea, this.frecuencia_de_pago / n_dias_anio) - 1;
       if (nc == 1) {
         saldo_inicial = saldo_financiar;
-        const newDate = this.lastday(initial_date.getFullYear(), initial_date.getMonth()+1);
+        const newDate = this.lastday(initial_date.getFullYear(), initial_date.getMonth()+1, initial_date.getDate());
         this.fechas_de_pago.push(newDate);
       } else {
         saldo_inicial = saldo_final;
-        const newDate = this.lastday(this.fechas_de_pago[nc-2].getFullYear(), this.fechas_de_pago[nc-2].getMonth()+1);
+        const newDate = this.lastday(this.fechas_de_pago[nc-2].getFullYear(), this.fechas_de_pago[nc-2].getMonth()+1, initial_date.getDate());
         this.fechas_de_pago.push(newDate)
       }
       interes = -saldo_inicial * tep;
@@ -197,10 +199,11 @@ export class Calculate {
       else{
         amort_aux = 0;
       }
-      this.amortizacion.push(parseFloat(amort_aux.toFixed(2)));
+      this.amortizacion.push(-parseFloat(amort_aux.toFixed(2)));
       segRisk = -segRies;
       cuota_aux = interes + amort_aux + segDes;
-      this.cuotas.push(parseFloat(cuota_aux.toFixed(2)));
+      this.cuotas.push(-parseFloat(cuota_aux.toFixed(2)));
+      this.prom_cuotas += -(cuota_aux);
       saldo_final = saldo_inicial + amort_aux;
       flujo = cuota_aux + segRisk;
       flujos.push(flujo)
@@ -210,7 +213,7 @@ export class Calculate {
     this.tcea = (Math.pow(1+tirr, numero_cuotas_anio)-1) * 100
 
     this.tcea = parseFloat(this.tcea.toFixed(3))
-
+    this.prom_cuotas = parseFloat((this.prom_cuotas/total_cuotas).toFixed(2));
   }
 
   peruvian_method(precio_venta_activo: number, cuota_inicial: number,
@@ -219,6 +222,7 @@ export class Calculate {
     this.cuotas = [];
     this.amortizacion = [];
     this.fechas_de_pago = [];
+    this.prom_cuotas = 0;
 
     const factor: number[] = [];
 
@@ -250,12 +254,14 @@ export class Calculate {
       if (nc == 1) {
         flujos.push(flujo);
         saldo_inicial = saldo_financiar;
-        const newDate = this.lastday(initial_date.getFullYear(), initial_date.getMonth()+1);
+        //const newDate = this.lastday(initial_date.getFullYear(), initial_date.getMonth()+1);
+        const newDate = new Date(initial_date.getFullYear(), initial_date.getMonth()+2, 0);
         this.fechas_de_pago.push(newDate);
       }
       else {
         saldo_inicial = saldo_final;
-        const newDate = this.lastday(this.fechas_de_pago[nc-2].getFullYear(), this.fechas_de_pago[nc-2].getMonth()+1);
+        //const newDate = this.lastday(this.fechas_de_pago[nc-2].getFullYear(), this.fechas_de_pago[nc-2].getMonth()+1);
+        const newDate = new Date(this.fechas_de_pago[nc-2].getFullYear(), this.fechas_de_pago[nc-2].getMonth()+2, 0);
         this.fechas_de_pago.push(newDate);
       }
       if((this.fechas_de_pago[nc-1].getMonth()+1 == 7 || this.fechas_de_pago[nc-1].getMonth()+1 == 12) && this.fechas_de_pago[nc-1].getDate() >= 15 ) {
@@ -271,17 +277,18 @@ export class Calculate {
     }
     for(let nc = 1; nc <= total_cuotas; nc++){
       interes = -saldo_inicial * tep;
-      if((this.fechas_de_pago[nc-1].getMonth()+1 == 7 || this.fechas_de_pago[nc-1].getMonth()+1 == 12) && this.fechas_de_pago[nc-1].getDate() >= 15 ) {
+      if((this.fechas_de_pago[nc-1].getMonth()+1 == 7 || this.fechas_de_pago[nc-1].getMonth()+1 == 12) && this.fechas_de_pago[nc-1].getDate() >= 15) {
         cuota_aux = -anualidad * n_cuotas_mul;
       }
       else{
         cuota_aux = -anualidad;
       }
       cuota_aux = parseFloat(cuota_aux.toFixed(2));
-      this.cuotas.push(cuota_aux);
+      this.cuotas.push(-cuota_aux);
+      this.prom_cuotas += -(cuota_aux);
 
       amort_aux = cuota_aux - interes;
-      this.amortizacion.push(amort_aux);
+      this.amortizacion.push(-amort_aux);
       segDes = -saldo_inicial * this.tasa_desgravamen;
       segRisk = -segRies;
       saldo_final = saldo_inicial + amort_aux;
@@ -292,8 +299,9 @@ export class Calculate {
     this.tcea = (Math.pow(1+tirr, n_dias_anio/this.frecuencia_de_pago)-1) * 100
 
     this.tcea = parseFloat(this.tcea.toFixed(3))
-
+    this.prom_cuotas = parseFloat((this.prom_cuotas/total_cuotas).toFixed(2));
   }
+
   peruvian_method_two(precio_venta_activo: number, cuota_inicial: number,
                 n_anios: number, tea: number,   n_dias_anio: number, initial_date: Date): void {
     // Clear arrays
@@ -330,12 +338,14 @@ export class Calculate {
         saldo_inicial = saldo_financiar;
 
         flujos.push(flujo);
-        const newDate = this.lastday(initial_date.getFullYear(), initial_date.getMonth()+1);
+        //const newDate = this.lastday(initial_date.getFullYear(), initial_date.getMonth()+1);
+        const newDate = new Date(initial_date.getFullYear(), initial_date.getMonth()+2, 0);
         this.fechas_de_pago.push(newDate);
       }
       else {
         saldo_inicial = saldo_final;
-        const newDate = this.lastday(this.fechas_de_pago[nc-2].getFullYear(), this.fechas_de_pago[nc-2].getMonth()+1);
+        //const newDate = this.lastday(this.fechas_de_pago[nc-2].getFullYear(), this.fechas_de_pago[nc-2].getMonth()+1);
+        const newDate = new Date(this.fechas_de_pago[nc-2].getFullYear(), this.fechas_de_pago[nc-2].getMonth()+2, 0);
         this.fechas_de_pago.push(newDate);
       }
       if((this.fechas_de_pago[nc-1].getMonth()+1 == 7 || this.fechas_de_pago[nc-1].getMonth()+1 == 12) && this.fechas_de_pago[nc-1].getDate() >= 15 ) {
@@ -368,10 +378,11 @@ export class Calculate {
       }
 
       cuota_aux = parseFloat(cuota_aux.toFixed(2));
-      this.cuotas.push(cuota_aux);
+      this.cuotas.push(-cuota_aux);
+      this.prom_cuotas += -(cuota_aux);
 
       amort_aux = cuota_aux - interes;
-      this.amortizacion.push(amort_aux);
+      this.amortizacion.push(-amort_aux);
       segDes = -saldo_inicial * this.tasa_desgravamen;
       segRisk = -segRies;
       saldo_final = saldo_inicial + amort_aux;
@@ -383,6 +394,7 @@ export class Calculate {
     this.tcea = (Math.pow(1+tirr, n_dias_anio/this.frecuencia_de_pago)-1) * 100
 
     this.tcea = parseFloat(this.tcea.toFixed(3))
+    this.prom_cuotas = parseFloat((this.prom_cuotas/total_cuotas).toFixed(2));
   }
 
 }

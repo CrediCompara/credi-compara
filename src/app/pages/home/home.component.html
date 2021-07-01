@@ -32,8 +32,7 @@
               aria-label="units"></mat-slider>
             <mat-form-field appearance="fill">
               <mat-label>Moneda</mat-label>
-              <mat-select formControlName="currency" required
-                          (selectionChange)="handleSelectionChange($event)">
+              <mat-select formControlName="currency" required (selectionChange)="handleSelectionChange($event)">
                 <mat-option value="sol">Soles</mat-option>
                 <mat-option value="dolar">Dólares</mat-option>
               </mat-select>
@@ -56,14 +55,7 @@
               <mat-datepicker #dp3 disabled="false"></mat-datepicker>
             </mat-form-field>
             <mat-label>Cuota Inicial</mat-label>
-            <mat-slider
-              required
-              [displayWith]="formatSliderInitialFee"
-              formControlName="initial_fee"
-              thumbLabel
-              step="5"
-              min="10"
-              max="50"></mat-slider>
+            <mat-slider required [displayWith]="formatSliderInitialFee" formControlName="initial_fee" thumbLabel step="5" min="10" max="50"></mat-slider>
             <mat-form-field appearance="fill">
               <mat-label>Tipo de Año</mat-label>
               <mat-select formControlName="type_year" required>
@@ -81,7 +73,7 @@
     <mat-spinner *ngIf="isLoading" color="Warn" diameter="200"></mat-spinner>
     <div class="bank1" *ngIf="isFill">
       <div class="desing" *ngFor="let d of dataSourceList; index as i" align="center">
-        <img class="photo" [src]="this.assetstList[i]" >
+        <img class="photo" [src]="this.assetstList[i]">
         <mat-card [ngClass]="this.classList[i]">
           <div class="card1">
             <div class="group1">
@@ -98,7 +90,7 @@
             </div>
             <div class="group4">
               <div class="title">Moneda</div>
-              <div > {{d.currency}} </div>
+              <div> {{d.currency}} </div>
             </div>
             <div class="group5">
               <div class="title">Plazo</div>
@@ -117,12 +109,15 @@
             <button mat-icon-button matTooltip="Guardar resultado" (click)="handleSaveButton(i)">
               <mat-icon [attr.id]="i">favorite</mat-icon>
             </button>
-            <button mat-icon-button routerLink="/schedule"  matTooltip="Ver calendario de cuotas">
+            <button mat-icon-button (click)="handleTabulation(i)" matTooltip="Ver calendario de cuotas">
               <mat-icon>payments</mat-icon>
             </button>
           </div>
         </mat-card>
       </div>
-    </div >
+    </div>
   </div>
+</div>
+<div class="tabla "*ngIf="view_calendar">
+  <app-calendario-pagos [selected_tab_data]="selected_tab_data"> </app-calendario-pagos>
 </div>
