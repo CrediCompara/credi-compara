@@ -8,6 +8,7 @@ import {Calculate} from './calculate';
 import {UserApiService} from 'src/app/services/user-api.service';
 import {TokenStorageService} from 'src/app/services/token-storage.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -33,6 +34,7 @@ export class HomeComponent implements OnInit {
   listNumber: number[]=[]
   isLoading: Boolean = false;
   current_index: number = 0;
+  isLoggedIn: Boolean = false;
 
   // Tabular calendario
   dates_tab: Date[][]=[];
@@ -44,8 +46,7 @@ export class HomeComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private ratesApi: RatesApiService,
               private userApi: UserApiService, private tokenStorage: TokenStorageService,
-              private _snackBar: MatSnackBar,
-             ) {
+              private _snackBar: MatSnackBar, private router: Router) {
     this.minDate = new Date();
     this.minDate = new Date(this.minDate.getFullYear(), 0, 1);
     this.maxDate = new Date(this.minDate.getFullYear(), 12, 0);
@@ -63,6 +64,10 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isLoggedIn = !!this.tokenStorage.getToken();
+    if(!this.isLoggedIn){
+      this.router.navigate(['/login']);
+    }
   }
 
   onSubmit(): void {
