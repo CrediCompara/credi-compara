@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './pages/home/home.component';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -15,9 +15,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
-import { MatTable } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
-//import { MatTableDataSource } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatSelectModule } from '@angular/material/select';
@@ -26,14 +24,16 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import {RatesApiService} from './services/rates-api.service';
-import {UserApiService} from './services/user-api.service';
-import {authInterceptorProviders} from './helpers/auth-interceptor';
+import { RatesApiService } from './services/rates-api.service';
+import { UserApiService } from './services/user-api.service';
+import { authInterceptorProviders } from './helpers/auth-interceptor';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
-import {MatTooltipModule} from "@angular/material/tooltip";
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { SignupComponent } from './pages/signup/signup.component';
 import { SaveComponent } from './pages/save/save.component';
 import { CalendarioPagosComponent } from './pages/home/calendario-pagos/calendario-pagos.component'
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -43,7 +43,7 @@ import { CalendarioPagosComponent } from './pages/home/calendario-pagos/calendar
     NotFoundComponent,
     SignupComponent,
     SaveComponent,
-    CalendarioPagosComponent
+    CalendarioPagosComponent,
   ],
   imports: [
     BrowserModule,
@@ -69,7 +69,8 @@ import { CalendarioPagosComponent } from './pages/home/calendario-pagos/calendar
     MatDatepickerModule,
     MatNativeDateModule,
     MatTooltipModule,
-    //MatTableDataSource
+    MatDialogModule,
+    MatMenuModule
   ],
   providers: [RatesApiService, UserApiService, authInterceptorProviders],
   bootstrap: [AppComponent]
