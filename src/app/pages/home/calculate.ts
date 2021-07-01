@@ -288,10 +288,11 @@ export class Calculate {
       this.prom_cuotas += -(cuota_aux);
 
       amort_aux = cuota_aux - interes;
-      this.amortizacion.push(-amort_aux);
+      this.amortizacion.push(amort_aux);
       segDes = -saldo_inicial * this.tasa_desgravamen;
       segRisk = -segRies;
       saldo_final = saldo_inicial + amort_aux;
+      console.log(segDes, saldo_inicial, this.tasa_desgravamen)
       flujo = cuota_aux + segRisk + segDes;
       flujos.push(flujo)
     }
